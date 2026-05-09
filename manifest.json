@@ -1,0 +1,18 @@
+{
+  "name": "Acervo Celo — Simulados",
+  "short_name": "Acervo Celo",
+  "description": "Plataforma de Simulados para Medicina · 3º Período",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060a06",
+  "theme_color": "#4ade4a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://github.com/Sunzinhoo/Acervo-Celo/blob/main/Acervo%20Celo%20LOGO.png?raw=true",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
