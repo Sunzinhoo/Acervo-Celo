@@ -83,10 +83,20 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  function formatTime(iso) {
-    if (!iso) return '—';
-    const d = new Date(iso);
+  function formatTime(val) {
+    if (!val || val === 'DISCONNECT') return '—';
+    if (typeof val === 'number') {
+      const d = new Date(val);
+      return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+    const d = new Date(val);
     return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function getSaida(v) {
+    if (v.saidaTs && typeof v.saidaTs === 'number') return formatTime(v.saidaTs);
+    if (v.saida && v.saida !== 'DISCONNECT') return formatTime(v.saida);
+    return null;
   }
 
   function isHoje(iso) {
@@ -159,17 +169,19 @@
       return;
     }
 
-    lista.innerHTML = itens.map(v => `
+    lista.innerHTML = itens.map(v => {
+      const saida = getSaida(v);
+      return `
       <div class="item">
         <div class="item-icon">${v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
         <div class="item-info">
           <div class="item-disp">${v.dispositivo}</div>
-          <div class="item-time">Entrou ${formatTime(v.entrada)}${v.saida ? ' · Saiu ' + formatTime(v.saida) : ''}</div>
+          <div class="item-time">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu ' + saida : ''}</div>
           ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
         </div>
-        <span class="${v.saida ? 'badge-offline' : 'badge-online'}">${v.saida ? 'Saiu' : '● Online'}</span>
+        <span class="${saida ? 'badge-offline' : 'badge-online'}">${saida ? 'Saiu' : '● Online'}</span>
       </div>
-    `).join('');
+    `}).join('');
   });
 </script>
 </body>

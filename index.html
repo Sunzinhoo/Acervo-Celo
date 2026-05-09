@@ -3688,10 +3688,9 @@ window.addEventListener('appinstalled', () => {
     saida: null
   });
 
-  onDisconnect(presencaRef).set({
-    dispositivo,
-    entrada,
-    saida: new Date().toISOString()
+  onDisconnect(presencaRef).update({
+    saida: 'DISCONNECT',
+    saidaTs: serverTimestamp()
   });
 
   const historicoRef = push(ref(db, "historico"));
@@ -3701,7 +3700,7 @@ window.addEventListener('appinstalled', () => {
     entrada,
     timestamp: Date.now()
   });
-  onDisconnect(historicoRef).update({ saida: new Date().toISOString() });
+  onDisconnect(historicoRef).update({ saida: 'DISCONNECT', saidaTs: serverTimestamp() });
 </script>
 </body>
 </html>
