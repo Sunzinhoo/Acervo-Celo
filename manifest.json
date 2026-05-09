@@ -9,7 +9,7 @@
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://github.com/Sunzinhoo/Acervo-Celo/blob/main/Acervo%20Celo%20LOGO.png?raw=true",
+      "src": "ICON.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
