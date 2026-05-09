@@ -3631,5 +3631,48 @@ window.addEventListener('appinstalled', () => {
     <button onclick="fecharBanner()" style="background:transparent;color:#7a9b7a;border:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;">Agora não</button>
   </div>
 </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, onDisconnect, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCd2h62MeUrOsX8wDOyStv2Bhax6MtuvbM",
+    authDomain: "acervo-celo.firebaseapp.com",
+    databaseURL: "https://acervo-celo-default-rtdb.firebaseio.com",
+    projectId: "acervo-celo",
+    storageBucket: "acervo-celo.firebasestorage.app",
+    messagingSenderId: "707334743183",
+    appId: "1:707334743183:web:4cf49a0b7f549efb26fcfa",
+    measurementId: "G-DP3SP6QW19"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const dispositivo = /Mobi|Android/i.test(navigator.userAgent) ? "📱 Celular" : "💻 PC";
+  const entrada = new Date().toISOString();
+
+  const presencaRef = push(ref(db, "online"));
+  set(presencaRef, {
+    dispositivo,
+    entrada,
+    saida: null
+  });
+
+  onDisconnect(presencaRef).set({
+    dispositivo,
+    entrada,
+    saida: new Date().toISOString()
+  });
+
+  const historicoRef = push(ref(db, "historico"));
+  set(historicoRef, {
+    dispositivo,
+    entrada,
+    timestamp: Date.now()
+  });
+  onDisconnect(historicoRef).update({ saida: new Date().toISOString() });
+</script>
 </body>
 </html>

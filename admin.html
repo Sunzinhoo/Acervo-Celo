@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Acervo Celo — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #060a06; color: #e8f5e8; font-family: 'DM Sans', sans-serif; min-height: 100vh; padding: 24px 16px; }
+  h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; color: #4ade4a; margin-bottom: 4px; }
+  .subtitle { color: #7a9b7a; font-size: 14px; margin-bottom: 32px; }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px; }
+  .card { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 14px; padding: 18px; }
+  .card-label { font-size: 12px; color: #7a9b7a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #4ade4a; }
+  .card-value.secondary { color: #e8f5e8; font-size: 28px; }
+  .section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: #e8f5e8; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .dot-live { width: 8px; height: 8px; border-radius: 50%; background: #4ade4a; animation: pulse 1.5s infinite; flex-shrink: 0; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+  .lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
+  .item { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+  .item-icon { font-size: 20px; flex-shrink: 0; }
+  .item-info { flex: 1; }
+  .item-disp { font-size: 13px; font-weight: 500; color: #e8f5e8; }
+  .item-time { font-size: 11px; color: #7a9b7a; margin-top: 2px; }
+  .badge-online { background: rgba(74,222,74,0.15); color: #4ade4a; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(74,222,74,0.3); flex-shrink: 0; }
+  .badge-offline { background: rgba(122,155,122,0.1); color: #7a9b7a; font-size: 10px; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(122,155,122,0.2); flex-shrink: 0; }
+  .empty { color: #7a9b7a; font-size: 13px; text-align: center; padding: 24px; }
+  .divider { border: none; border-top: 1px solid #1a2e1a; margin-bottom: 24px; }
+  .refresh-btn { background: transparent; border: 1px solid #1a2e1a; color: #7a9b7a; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 24px; }
+  .refresh-btn:hover { border-color: #4ade4a; color: #4ade4a; }
+</style>
+</head>
+<body>
+
+<h1>⚡ Admin</h1>
+<p class="subtitle">Acervo Celo — Painel de presença em tempo real</p>
+
+<div class="cards">
+  <div class="card">
+    <div class="card-label">Online agora</div>
+    <div class="card-value" id="totalOnline">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Total hoje</div>
+    <div class="card-value secondary" id="totalHoje">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">Celulares</div>
+    <div class="card-value secondary" id="totalCelular">—</div>
+  </div>
+  <div class="card">
+    <div class="card-label">PCs</div>
+    <div class="card-value secondary" id="totalPC">—</div>
+  </div>
+</div>
+
+<div class="section-title"><div class="dot-live"></div> Online agora</div>
+<div class="lista" id="listaOnline"><div class="empty">Carregando...</div></div>
+
+<hr class="divider">
+
+<div class="section-title">📋 Histórico de hoje</div>
+<button class="refresh-btn" onclick="location.reload()">↻ Atualizar</button>
+<div class="lista" id="listaHistorico"><div class="empty">Carregando...</div></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCd2h62MeUrOsX8wDOyStv2Bhax6MtuvbM",
+    authDomain: "acervo-celo.firebaseapp.com",
+    databaseURL: "https://acervo-celo-default-rtdb.firebaseio.com",
+    projectId: "acervo-celo",
+    storageBucket: "acervo-celo.firebasestorage.app",
+    messagingSenderId: "707334743183",
+    appId: "1:707334743183:web:4cf49a0b7f549efb26fcfa"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  function formatTime(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function isHoje(iso) {
+    if (!iso) return false;
+    const d = new Date(iso);
+    const hoje = new Date();
+    return d.getDate() === hoje.getDate() && d.getMonth() === hoje.getMonth() && d.getFullYear() === hoje.getFullYear();
+  }
+
+  // Online agora
+  onValue(ref(db, 'online'), (snap) => {
+    const data = snap.val();
+    const lista = document.getElementById('listaOnline');
+    const total = document.getElementById('totalOnline');
+    const celular = document.getElementById('totalCelular');
+    const pc = document.getElementById('totalPC');
+
+    if (!data) {
+      lista.innerHTML = '<div class="empty">Ninguém online agora</div>';
+      total.textContent = '0';
+      celular.textContent = '0';
+      pc.textContent = '0';
+      return;
+    }
+
+    const itens = Object.values(data).filter(v => !v.saida || v.saida === null);
+    total.textContent = itens.length;
+    celular.textContent = itens.filter(v => v.dispositivo.includes('Celular')).length;
+    pc.textContent = itens.filter(v => v.dispositivo.includes('PC')).length;
+
+    if (itens.length === 0) {
+      lista.innerHTML = '<div class="empty">Ninguém online agora</div>';
+      return;
+    }
+
+    lista.innerHTML = itens.map(v => `
+      <div class="item">
+        <div class="item-icon">${v.dispositivo.includes('Celular') ? '📱' : '💻'}</div>
+        <div class="item-info">
+          <div class="item-disp">${v.dispositivo}</div>
+          <div class="item-time">Entrou às ${formatTime(v.entrada)}</div>
+        </div>
+        <span class="badge-online">● Online</span>
+      </div>
+    `).join('');
+  });
+
+  // Histórico
+  onValue(ref(db, 'historico'), (snap) => {
+    const data = snap.val();
+    const lista = document.getElementById('listaHistorico');
+    const totalHoje = document.getElementById('totalHoje');
+
+    if (!data) {
+      lista.innerHTML = '<div class="empty">Sem histórico ainda</div>';
+      totalHoje.textContent = '0';
+      return;
+    }
+
+    const itens = Object.values(data)
+      .filter(v => isHoje(v.entrada))
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 50);
+
+    totalHoje.textContent = itens.length;
+
+    if (itens.length === 0) {
+      lista.innerHTML = '<div class="empty">Sem acessos hoje ainda</div>';
+      return;
+    }
+
+    lista.innerHTML = itens.map(v => `
+      <div class="item">
+        <div class="item-icon">${v.dispositivo.includes('Celular') ? '📱' : '💻'}</div>
+        <div class="item-info">
+          <div class="item-disp">${v.dispositivo}</div>
+          <div class="item-time">Entrou ${formatTime(v.entrada)}${v.saida ? ' · Saiu ' + formatTime(v.saida) : ''}</div>
+        </div>
+        <span class="${v.saida ? 'badge-offline' : 'badge-online'}">${v.saida ? 'Saiu' : '● Online'}</span>
+      </div>
+    `).join('');
+  });
+</script>
+</body>
+</html>
