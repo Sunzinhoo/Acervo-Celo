@@ -24,7 +24,8 @@
   .item-info { flex: 1; }
   .item-disp { font-size: 13px; font-weight: 500; color: #e8f5e8; }
   .item-time { font-size: 11px; color: #7a9b7a; margin-top: 2px; }
-  .badge-online { background: rgba(74,222,74,0.15); color: #4ade4a; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(74,222,74,0.3); flex-shrink: 0; }
+  .prova-badge { display: inline-block; margin-top: 6px; background: rgba(74,222,74,0.12); border: 1px solid rgba(74,222,74,0.3); color: #4ade4a; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 8px; }
+  .prova-badge-vazia { display: inline-block; margin-top: 6px; color: #3a5a3a; font-size: 11px; font-style: italic; }
   .badge-offline { background: rgba(122,155,122,0.1); color: #7a9b7a; font-size: 10px; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(122,155,122,0.2); flex-shrink: 0; }
   .empty { color: #7a9b7a; font-size: 13px; text-align: center; padding: 24px; }
   .divider { border: none; border-top: 1px solid #1a2e1a; margin-bottom: 24px; }
@@ -127,6 +128,7 @@
         <div class="item-info">
           <div class="item-disp">${v.dispositivo}</div>
           <div class="item-time">Entrou às ${formatTime(v.entrada)}</div>
+          ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : '<div class="prova-badge-vazia">Nenhuma prova acessada</div>'}
         </div>
         <span class="badge-online">● Online</span>
       </div>
@@ -163,6 +165,7 @@
         <div class="item-info">
           <div class="item-disp">${v.dispositivo}</div>
           <div class="item-time">Entrou ${formatTime(v.entrada)}${v.saida ? ' · Saiu ' + formatTime(v.saida) : ''}</div>
+          ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
         </div>
         <span class="${v.saida ? 'badge-offline' : 'badge-online'}">${v.saida ? 'Saiu' : '● Online'}</span>
       </div>
