@@ -3170,6 +3170,7 @@ function toggleGrupo(gi) {
   body.style.display = open ? 'none' : 'flex';
   body.style.flexDirection = 'column';
   arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
+  if (!open) aplicarInsigniaRecentes();
 }
 
 // ====== MODAL SELEÇÃO DE QUESTÕES ======
