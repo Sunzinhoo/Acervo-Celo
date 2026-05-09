@@ -1,4 +1,4 @@
-const CACHE_NAME = 'acervo-celo-v1';
+const CACHE_NAME = 'acervo-celo-v2';
 const urlsToCache = ['/'];
 
 self.addEventListener('install', (event) => {
