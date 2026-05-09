@@ -3650,7 +3650,25 @@ window.addEventListener('appinstalled', () => {
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  const dispositivo = /Mobi|Android/i.test(navigator.userAgent) ? "📱 Celular" : "💻 PC";
+  const ua = navigator.userAgent;
+  const isMobile = /Mobi|Android/i.test(ua);
+  const icon = isMobile ? "📱" : "💻";
+
+  let so = "Desconhecido";
+  if (/Android/i.test(ua)) so = "Android";
+  else if (/iPhone|iPad|iPod/i.test(ua)) so = "iOS";
+  else if (/Windows/i.test(ua)) so = "Windows";
+  else if (/Mac OS X/i.test(ua) && !/iPhone|iPad/i.test(ua)) so = "MacOS";
+  else if (/Linux/i.test(ua)) so = "Linux";
+
+  let browser = "Desconhecido";
+  if (/Edg\//i.test(ua)) browser = "Edge";
+  else if (/OPR|Opera/i.test(ua)) browser = "Opera";
+  else if (/Chrome/i.test(ua)) browser = "Chrome";
+  else if (/Safari/i.test(ua) && !/Chrome/i.test(ua)) browser = "Safari";
+  else if (/Firefox/i.test(ua)) browser = "Firefox";
+
+  const dispositivo = `${icon} ${so} · ${browser}`;
   const entrada = new Date().toISOString();
 
   const presencaRef = push(ref(db, "online"));
