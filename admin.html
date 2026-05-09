@@ -29,8 +29,10 @@
   .badge-offline { background: rgba(122,155,122,0.1); color: #7a9b7a; font-size: 10px; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(122,155,122,0.2); flex-shrink: 0; }
   .empty { color: #7a9b7a; font-size: 13px; text-align: center; padding: 24px; }
   .divider { border: none; border-top: 1px solid #1a2e1a; margin-bottom: 24px; }
-  .refresh-btn { background: transparent; border: 1px solid #1a2e1a; color: #7a9b7a; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 24px; }
+  .refresh-btn { background: transparent; border: 1px solid #1a2e1a; color: #7a9b7a; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
   .refresh-btn:hover { border-color: #4ade4a; color: #4ade4a; }
+  .danger-btn { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 24px; margin-left: 8px; }
+  .danger-btn:hover { border-color: #e05555; background: rgba(220,50,50,0.08); }
 </style>
 </head>
 <body>
@@ -63,7 +65,10 @@
 <hr class="divider">
 
 <div class="section-title">📋 Histórico de hoje</div>
-<button class="refresh-btn" onclick="location.reload()">↻ Atualizar</button>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+  <span style="font-size:11px;color:#3a5a3a;">● Ao vivo</span>
+  <button class="danger-btn" style="margin-bottom:0;margin-left:0;" onclick="resetarHistorico()">🗑 Resetar histórico</button>
+</div>
 <div class="lista" id="listaHistorico"><div class="empty">Carregando...</div></div>
 
 <script type="module">
@@ -145,7 +150,12 @@
     `).join('');
   });
 
-  // Histórico
+  window.resetarHistorico = async () => {
+    if (!confirm('Tem certeza que quer apagar todo o histórico de hoje?')) return;
+    const { remove } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+    await remove(ref(db, 'historico'));
+    await remove(ref(db, 'online'));
+  };
   onValue(ref(db, 'historico'), (snap) => {
     const data = snap.val();
     const lista = document.getElementById('listaHistorico');
