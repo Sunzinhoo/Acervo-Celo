@@ -3684,12 +3684,18 @@ window.addEventListener('appinstalled', () => {
   // Buscar localização por IP
   let localizacao = '';
   try {
-    const geo = await fetch('https://freeipapi.com/api/json');
+    const geo = await fetch('https://ipwho.is/');
     const geoData = await geo.json();
-    if (geoData.cityName) {
-      localizacao = `${geoData.cityName}, ${geoData.regionName}`;
+    if (geoData.city) {
+      localizacao = `${geoData.city}, ${geoData.region}`;
     }
-  } catch(e) {}
+  } catch(e) {
+    try {
+      const geo2 = await fetch('https://ipinfo.io/json');
+      const geoData2 = await geo2.json();
+      if (geoData2.city) localizacao = `${geoData2.city}, ${geoData2.region}`;
+    } catch(e2) {}
+  }
 
   const presencaRef = push(ref(db, "online"));
   window._fbPresencaRef = presencaRef;
