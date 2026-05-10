@@ -3684,10 +3684,10 @@ window.addEventListener('appinstalled', () => {
   // Buscar localização por IP
   let localizacao = '';
   try {
-    const geo = await fetch('https://ipapi.co/json/');
+    const geo = await fetch('https://freeipapi.com/api/json');
     const geoData = await geo.json();
-    if (geoData.city) {
-      localizacao = geoData.district ? `${geoData.district}, ${geoData.city}` : `${geoData.city}, ${geoData.region}`;
+    if (geoData.cityName) {
+      localizacao = `${geoData.cityName}, ${geoData.regionName}`;
     }
   } catch(e) {}
 
