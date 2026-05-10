@@ -3681,11 +3681,22 @@ window.addEventListener('appinstalled', () => {
   const dispositivo = `${icon} ${so} · ${browser}`;
   const entrada = new Date().toISOString();
 
+  // Buscar localização por IP
+  let localizacao = '';
+  try {
+    const geo = await fetch('https://ip-api.com/json/?fields=city,district,regionName&lang=pt-BR');
+    const geoData = await geo.json();
+    if (geoData.city) {
+      localizacao = geoData.district ? `${geoData.district}, ${geoData.city}` : `${geoData.city}, ${geoData.regionName}`;
+    }
+  } catch(e) {}
+
   const presencaRef = push(ref(db, "online"));
   window._fbPresencaRef = presencaRef;
   set(presencaRef, {
     dispositivo,
     entrada,
+    localizacao,
     saida: null
   });
 
@@ -3699,6 +3710,7 @@ window.addEventListener('appinstalled', () => {
   set(historicoRef, {
     dispositivo,
     entrada,
+    localizacao,
     timestamp: Date.now()
   });
   onDisconnect(historicoRef).update({ saida: 'DISCONNECT', saidaTs: serverTimestamp() });

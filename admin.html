@@ -142,7 +142,7 @@
         <div class="item-icon">${v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
         <div class="item-info">
           <div class="item-disp">${v.dispositivo}</div>
-          <div class="item-time">Entrou às ${formatTime(v.entrada)}</div>
+          <div class="item-time">Entrou às ${formatTime(v.entrada)}${v.localizacao ? ' · 📍 ' + v.localizacao : ''}</div>
           ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : '<div class="prova-badge-vazia">Nenhuma prova acessada</div>'}
         </div>
         <span class="badge-online">● Online</span>
@@ -186,7 +186,7 @@
         <div class="item-icon">${v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
         <div class="item-info">
           <div class="item-disp">${v.dispositivo}</div>
-          <div class="item-time">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu ' + saida : ''}</div>
+          <div class="item-time">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu ' + saida : ''}${v.localizacao ? ' · 📍 ' + v.localizacao : ''}</div>
           ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
         </div>
         <span class="${saida ? 'badge-offline' : 'badge-online'}">${saida ? 'Saiu' : '● Online'}</span>
