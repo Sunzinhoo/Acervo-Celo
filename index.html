@@ -318,6 +318,137 @@
     padding: 3px 8px;
   }
 
+  /* ===== ACCORDION PROGRAMADAS ===== */
+  .grupo-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.28s ease;
+  }
+  .grupo-body.aberto {
+    opacity: 1;
+  }
+
+  /* ===== COUNTDOWN BALÃO ===== */
+  .cd-balloon-wrap {
+    position: absolute;
+    top: -46px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .cd-balloon {
+    background: #0b150b;
+    border: 1.5px solid var(--green-border);
+    border-radius: 10px;
+    padding: 6px 12px 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.55), 0 0 12px rgba(74,222,74,0.1);
+    white-space: nowrap;
+    position: relative;
+    animation: balloonPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .cd-balloon.urgente {
+    border-color: rgba(240,82,82,0.6);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.55), 0 0 16px rgba(240,82,82,0.2);
+    animation: balloonPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both, pulseRedBalloon 2s 0.5s ease-in-out infinite;
+  }
+  .cd-balloon.proximo {
+    border-color: rgba(245,158,11,0.55);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.55), 0 0 14px rgba(245,158,11,0.15);
+  }
+  @keyframes balloonPop {
+    from { opacity: 0; transform: scale(0.6) translateY(8px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes pulseRedBalloon {
+    0%,100% { box-shadow: 0 4px 18px rgba(0,0,0,0.55), 0 0 8px rgba(240,82,82,0.15); }
+    50%      { box-shadow: 0 4px 18px rgba(0,0,0,0.55), 0 0 24px rgba(240,82,82,0.4); }
+  }
+  /* triângulo cauda do balão */
+  .cd-balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -7px;
+    right: 16px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 7px solid #0b150b;
+  }
+  .cd-balloon::before {
+    content: '';
+    position: absolute;
+    bottom: -9px;
+    right: 15px;
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--green-border);
+  }
+  .cd-balloon.urgente::before  { border-top-color: rgba(240,82,82,0.6); }
+  .cd-balloon.urgente::after   { border-top-color: #0b150b; }
+  .cd-balloon.proximo::before  { border-top-color: rgba(245,158,11,0.55); }
+
+  .cd-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .cd-balloon.normal  .cd-dot { background: var(--accent); box-shadow: 0 0 5px rgba(74,222,74,0.8); animation: blinkDot 2s infinite; }
+  .cd-balloon.proximo .cd-dot { background: var(--amber);  box-shadow: 0 0 5px rgba(245,158,11,0.8); animation: blinkDot 1.4s infinite; }
+  .cd-balloon.urgente .cd-dot { background: var(--red);    box-shadow: 0 0 5px rgba(240,82,82,0.9);  animation: blinkDot 0.7s infinite; }
+  @keyframes blinkDot {
+    0%,100% { opacity: 1; } 50% { opacity: 0.2; }
+  }
+
+  .cd-texto { display: flex; flex-direction: column; gap: 0; }
+  .cd-dias-num {
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+  }
+  .cd-num-val {
+    display: inline-block;
+    animation: numBounce 1.8s ease-in-out infinite;
+  }
+  .cd-num-txt {
+    font-size: 11px;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+  @keyframes numBounce {
+    0%,100% { transform: translateY(0) scale(1); }
+    30%     { transform: translateY(-4px) scale(1.15); }
+    50%     { transform: translateY(0) scale(0.97); }
+    65%     { transform: translateY(-2px) scale(1.05); }
+    80%     { transform: translateY(0) scale(1); }
+  }
+  .cd-balloon.normal  .cd-dias-num { color: var(--accent); }
+  .cd-balloon.proximo .cd-dias-num { color: var(--amber); }
+  .cd-balloon.urgente .cd-dias-num { color: var(--red); }
+  .cd-dias-label {
+    font-family: var(--font-head);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-top: 1px;
+  }
+
   /* ===== PROVAS (3º período) ===== */
   #screen-provas {
     display: none;
@@ -1449,13 +1580,29 @@
         <h3>IESC</h3>
         <p>Integração Ensino, Saúde e Comunidade</p>
       </div>
-      <div class="cat-card" onclick="irParaProvas('integradora')" style="grid-column:1/-1;padding:42px 32px;display:flex;flex-direction:column;align-items:center;">
+      <div class="cat-card" onclick="irParaProvas('integradora')" style="grid-column:1/-1;padding:42px 32px;display:flex;flex-direction:column;align-items:center;overflow:visible;">
         <span class="periodo-badge-ativo">Disponível</span>
+        <div class="cd-balloon-wrap">
+          <div class="cd-balloon normal" id="cd-integ-balloon">
+            <div class="cd-dot"></div>
+            <div class="cd-texto">
+              <div class="cd-dias-num" id="cd-integ-num"><span class="cd-num-val">--</span> <span class="cd-num-txt"></span></div>
+            </div>
+          </div>
+        </div>
         <div class="cat-card-icon" style="font-size:48px;margin-bottom:16px;">⭐</div>
         <h3 style="font-size:26px;margin-bottom:8px;">Integradora</h3>
         <p style="font-size:15px;">N2</p>
       </div>
-      <div class="cat-card" onclick="irParaProvas('programadas')" style="grid-column:1/-1;padding:10px 24px;display:flex;flex-direction:row;align-items:center;gap:12px;justify-content:center;">
+      <div class="cat-card" onclick="irParaProvas('programadas')" style="grid-column:1/-1;padding:10px 24px;display:flex;flex-direction:row;align-items:center;gap:12px;justify-content:center;overflow:visible;position:relative;">
+        <div class="cd-balloon-wrap" style="top:-44px;right:10px;">
+          <div class="cd-balloon normal" id="cd-prog-balloon">
+            <div class="cd-dot"></div>
+            <div class="cd-texto">
+              <div class="cd-dias-num" id="cd-prog-num"><span class="cd-num-val">--</span> <span class="cd-num-txt"></span></div>
+            </div>
+          </div>
+        </div>
         <div style="font-size:18px;">📋</div>
         <h3 style="font-size:14px;">Programadas</h3>
         <span class="prova-arrow" style="position:static;font-size:14px;">↗</span>
@@ -3140,7 +3287,26 @@ const TPI_REPETIDAS_PARTE1 = [
 
 const TPI_2024_1_FULL = [...TPI_2024_1, ...TPI_2024_1_PART2];
 
+const MCM_N2_2025_2 = [
+  {n:1,tipo:'mc',text:`(UNIPTAN) Um grupo de pesquisadores deseja investigar a relação entre o uso de um novo antidiabético oral e a ocorrência de insuficiência cardíaca em dois estudos independentes:\n\nEstudo X — Selecionaram primeiro pacientes com insuficiência cardíaca diagnosticada nos últimos 3 anos e pacientes sem insuficiência cardíaca e então analisaram nos prontuários se houve, ou não, uso prévio do novo medicamento.\n\nEstudo Y — Selecionaram um grupo de pacientes diabéticos sem insuficiência cardíaca, classificaram-nos em usuários e não usuários do medicamento e acompanharam ambos por 7 anos, observando quem desenvolvia insuficiência cardíaca ao longo do tempo.\n\nAssinale a alternativa que identifica corretamente os tipos de estudo e sua capacidade de inferir causalidade.`,alts:['Estudo X é caso-controle; Estudo Y é ensaio clínico; apenas o Estudo X identifica causalidade.','Estudo X é transversal; Estudo Y é coorte retrospectiva; ambos não permitem analisar temporalidade.','Estudo X é uma coorte; Estudo Y é um ensaio clínico randomizado; ambos permitem inferir causalidade.','Estudo X é caso-controle; Estudo Y é coorte prospectiva; apenas o Estudo Y infere causalidade.'],correct:3,comment:`✓ Correta: D — Estudo X parte do desfecho (doença) e busca a exposição retrospectivamente = caso-controle. Não infere causalidade. Estudo Y parte da exposição e acompanha prospectivamente = coorte prospectiva. Estabelece temporalidade e estima risco relativo, inferindo causalidade.\nRef: Fletcher, Epidemiologia Clínica, 5ª ed.`},
+  {n:2,tipo:'mc',text:`(AFYA Itacoatiara) Durante uma aula de Métodos Científicos em Medicina, um aluno do 3º período precisa elaborar uma questão de pesquisa para uma revisão sistemática sobre o uso de estatinas na prevenção de eventos cardiovasculares em adultos com hipercolesterolemia.\n\nQuestão: "Em adultos com hipercolesterolemia, o uso de estatinas, comparado à ausência de tratamento, reduz a incidência de eventos cardiovasculares?"\n\nQuais são os componentes PICO corretamente identificados?`,alts:['P: Adultos com hipercolesterolemia; I: Uso de estatinas; C: Ausência de tratamento; O: Redução da incidência de eventos cardiovasculares.','P: Grupo controle; I: Adultos com hipercolesterolemia; C: Uso de estatinas; O: Eventos cardiovasculares.','P: Uso de estatinas; I: Adultos com hipercolesterolemia; C: Incidência de eventos cardiovasculares; O: Comparação com grupo controle.','P: Adultos com hipercolesterolemia; I: Redução de eventos cardiovasculares; C: Uso de estatinas; O: Grupo controle.'],correct:0,comment:`✓ Correta: A — P: Adultos com hipercolesterolemia. I: Uso de estatinas. C: Ausência de tratamento. O: Redução da incidência de eventos cardiovasculares. PICO estrutura perguntas clínicas para revisões sistemáticas.\nRef: Santos et al., Rev. Latino-Am. Enfermagem, 2007.`},
+  {n:3,tipo:'mc',text:`(UNIPTAN) Um ensaio clínico randomizado, duplo-cego e controlado por placebo avaliou a eficácia do medicamento Cardioprev® na prevenção de IAM em pacientes com alto risco cardiovascular.\n\nResultados:\n• RRA: 2%\n• RRR: 33%\n• NNT: 50 por 3 anos\n\nConsiderando os princípios da MBE, assinale a interpretação mais apropriada:`,alts:['O tratamento apresenta grande benefício individual, pois cada paciente tratado terá sua chance de IAM reduzida em 33%.','A RRA de 2% indica que o medicamento é mais eficaz do que um com NNT igual a 2, o que representa um benefício clínico imediato.','A RRR deve ser sempre priorizada na tomada de decisão clínica, pois reflete o impacto direto do tratamento sobre o paciente.','O tratamento reduz em um terço o risco relativo de IAM, mas o benefício absoluto é modesto, com o tratamento de muitos pacientes para prevenir um único evento.'],correct:3,comment:`✓ Correta: D — RRR 33% = redução relativa (não individual). RRA 2% = benefício absoluto pequeno. NNT 50 = tratar 50 pacientes por 3 anos para evitar 1 evento. Na MBE, decisões consideram RRR + RRA + NNT.\nRef: Fletcher, Epidemiologia Clínica, 5ª ed., cap. 5.`},
+  {n:4,tipo:'mc',text:`(FMIT) Em um ambulatório de referência, um novo teste rápido para tuberculose pulmonar foi avaliado em pacientes com tosse há mais de duas semanas. O teste apresentou sensibilidade de 95% e especificidade de 60%. O médico deseja utilizá-lo como parte de um programa de triagem.\n\nQual é a principal implicação do uso desse teste no contexto descrito?`,alts:['O teste aumentará o número de falsos negativos, podendo deixar de identificar pacientes doentes.','O teste detectará a maioria dos pacientes doentes, mas poderá gerar resultados positivos em pessoas sem tuberculose.','O teste apresentará valores preditivos positivos elevados, independentemente da prevalência da doença.','O teste reduzirá o número de falsos positivos, sendo ideal para confirmar o diagnóstico de tuberculose.'],correct:1,comment:`✓ Correta: B — Alta sensibilidade (95%) minimiza falsos negativos, ideal para triagem. Baixa especificidade (60%) gera muitos falsos positivos. VPP depende da prevalência. Testes confirmatórios requerem alta especificidade.\nRef: Rouquayrol & Gurgel, Epidemiologia e Saúde, 8ª ed., p. 119.`},
+  {n:5,tipo:'mc',text:`(FMIT) Comissão hospitalar revisa uma metanálise de ECRs que avaliou suplementação de vitamina D como adjuvante no tratamento da COVID-19. O forest plot (desfecho: admissão em UTI) apresenta RR resumo ≈ 0,63 (IC95% 0,41–0,99) e I² ≈ 48%.\n\nAvalie e escolha a interpretação mais adequada sobre direção/significância do efeito e heterogeneidade:`,alts:['Não há diferença entre a vitamina D e o grupo controle; o I² alto e o peso estão concentrados em estudos pequenos.','O grupo que recebeu vitamina D aumentou admissões e a significância não depende de cruzar a linha de nulidade.','A vitamina D reduz significativamente a admissão em UTI com heterogeneidade moderada dos estudos.','Não é possível inferir significância pelo intervalo de confiança de 95%; seria necessário apenas o valor de p.'],correct:2,comment:`✓ Correta: C — RR 0,63 (IC95% 0,41–0,99) não cruza 1 → redução estatisticamente significativa. I² 48% = heterogeneidade moderada (não alta). O peso está distribuído entre estudos maiores.\nRef: Sîrbu AC et al., Nutrients, 2023; Rouquayrol, 8ª ed., p. 159.`},
+  {n:6,tipo:'mc',text:`(AFYA Ipatinga) Uma estudante de Medicina pretende desenvolver um trabalho sobre: "Evidências sobre o impacto das práticas de autocuidado na redução do estresse entre estudantes de Medicina." Ela deseja reunir resultados de pesquisas quantitativas e qualitativas, comparando metodologias, instrumentos e desfechos.\n\nQual tipo de revisão é mais adequado e por quê?`,alts:['Integrativa, pois esse método permite reunir e analisar de forma sistemática resultados de estudos com diferentes delineamentos, quantitativos e qualitativos, produzindo uma síntese abrangente e fundamentada.','Narrativa, pois permite ampla liberdade interpretativa, dispensando etapas sistematizadas de busca.','Narrativa, pois é indicada quando o pesquisador busca comparar estatisticamente resultados de estudos empíricos e produzir uma estimativa numérica combinada.','Integrativa, pois é uma revisão teórica baseada na experiência do pesquisador, sem critérios de inclusão/exclusão.'],correct:0,comment:`✓ Correta: A — Revisão integrativa: método híbrido e estruturado, combina estudos quantitativos e qualitativos com rigor metodológico (critérios de inclusão, exclusão e síntese crítica). Ideal para temas aplicados à prática médica.\nRef: Grupo Ânima Educação, Manual de Revisão Bibliográfica Sistemática Integrativa, 2014.`},
+  {n:7,tipo:'mc',text:`(AFYA Manacapuru) Um grupo de pesquisadores de um pronto-socorro pretende avaliar a eficácia de um novo medicamento para redução de crises álgicas em pacientes com artrite reumatoide. Desejam minimizar vieses, garantir comparabilidade entre grupos e obter evidências de alta validade interna.\n\nQual tipo de delineamento é o mais adequado?`,alts:['Ensaio clínico comunitário, aplicado a grupos populacionais, voltado à avaliação de intervenções em saúde pública.','Ensaio clínico não randomizado, em que os grupos são formados conforme conveniência ou critérios clínicos pré-estabelecidos.','Ensaio clínico controlado randomizado (ECR), no qual os participantes são alocados aleatoriamente nos grupos experimental e controle.','Ensaio clínico aberto, no qual pesquisadores e participantes têm conhecimento da intervenção utilizada.'],correct:2,comment:`✓ Correta: C — ECR é o padrão-ouro para avaliar eficácia de intervenções terapêuticas. Randomização garante comparabilidade e reduz vieses, oferecendo alta validade interna.\nRef: Vieira & Hossne, Metodologia Científica para a Área de Saúde, 3ª ed., 2021.`},
+  {n:8,tipo:'mc',text:`(FACIMPA) Um hospital terciário do SUS iniciou um protocolo de alta hospitalar precoce após ICP em pacientes de baixo risco. Homem de 62 anos, IAM tratado por ICP via acesso radial, TIMI 3, Killip I, FEVE >50%, sem enzimas elevadas.\n\nCom base no PCC, qual conjunto de componentes melhor estrutura a questão de pesquisa para uma revisão de escopo?`,alts:['P: pacientes de qualquer idade com doenças cardiovasculares; C: readmissão hospitalar; C: internações clínicas em geral.','P: adultos e idosos submetidos à ICP; C: alta hospitalar precoce; C: ICP (procedimento/ambiente clínico).','P: adultos com IAM em enfermaria geral; C: tempo total de internação; C: rede de atenção primária.','P: idosos com insuficiência cardíaca ambulatorial; C: adesão à dupla antiagregação; C: serviços de reabilitação cardíaca.'],correct:1,comment:`✓ Correta: B — PCC: P = adultos/idosos submetidos à ICP; C (Conceito) = alta hospitalar precoce; C (Contexto) = ICP. As demais alternativas erram a população, o conceito ou o contexto.\nRef: Vieira, Flores & Prado, Rev. Enfermagem UERJ, 2024.`},
+  {n:9,tipo:'mc',text:`(IESVAP) Pesquisadores avaliaram se exercícios supervisionados reduziriam a PAS em adultos hipertensos. Após 12 semanas: diferença média de −3,8 mmHg entre os grupos, p = 0,032. Estudo controlado, randomizado, análise por intenção de tratar.\n\nQual é a interpretação mais adequada dos resultados?`,alts:['O valor de p indica que há evidência estatística contra H₀, sustentando a existência de diferença entre os grupos, embora a decisão clínica deva considerar também a magnitude e a relevância prática do efeito observado.','O teste mostra que, embora tenha ocorrido diferença entre os grupos, o p-valor não influencia na decisão, pois qualquer diferença numérica já comprova efeito clínico relevante.','O resultado demonstra que, como p < 0,05, a hipótese nula deve ser aceita, indicando que a diferença ocorreu por variação aleatória.','O valor de p representa a probabilidade de H₀ ser verdadeira, confirmando que a intervenção é eficaz e clinicamente superior.'],correct:0,comment:`✓ Correta: A — p = 0,032 < 0,05 → evidência para rejeitar H₀ (diferença estatística entre grupos). Porém, significância estatística ≠ relevância clínica: o impacto prático depende do tamanho do efeito e do contexto.\nRef: Dancey, Reidy & Rowe, Estatística sem Matemática para as Ciências da Saúde.`},
+  {n:10,tipo:'mc',text:`(ITPAC Porto Nacional) Coorte prospectiva com 800 adultos acompanhados por 5 anos:\n• 400 fumantes: 120 desenvolveram DPOC\n• 400 não fumantes: 40 desenvolveram DPOC\n• RA exposto = 30%; RA não exposto = 10%; RR = 3,0; OR = 3,86\n\nAvalie as proposições:\nI. O risco absoluto indica a probabilidade de ocorrência do evento em cada grupo analisado.\nII. O risco relativo demonstra que a DPOC foi três vezes mais frequente entre fumantes.\nIII. O odds ratio estima a força de associação, aproximando-se do RR em estudos de coorte.\nIV. A diferença entre os riscos absolutos representa a redução relativa do risco.\n\nApenas as proposições corretas são:`,alts:['II, III e IV.','I, III e IV.','I, II e III.','I, II e IV.'],correct:2,comment:`✓ Correta: C (I, II e III) — I: correta (RA = probabilidade por grupo). II: correta (RR 3,0 = fumantes têm 3× mais risco). III: correta (OR aproxima-se do RR em coortes com evento incomum). IV: incorreta (diferença entre RA = redução ABSOLUTA, não relativa).\nRef: Rouquayrol & Gurgel, cap. 8; Rothman et al., Epidemiologia Moderna, 3ª ed.`},
+  {n:11,tipo:'mc',text:`(AFYA Palmas) Acadêmicos de Medicina precisam formular uma pergunta de pesquisa clínica sobre intervenções para reduzir mortalidade na síndrome coronariana aguda.\n\nQual técnica de formulação de pergunta é a mais adequada para guiar uma busca estruturada de evidências nesse cenário clínico?`,alts:['PO.','PICOT.','PICO.','PCC.'],correct:2,comment:`✓ Correta: C — PICO (Paciente/Problema, Intervenção, Comparação, Outcome) é a mais indicada para questões clínicas específicas com foco em intervenção e comparação. PO = questões contextuais/prevalência. PCC = revisões de escopo. PICOT = inclui tempo, menos usada em treinamentos práticos.\nRef: Fletcher et al., Epidemiologia Clínica, 6ª ed., 2021.`},
+  {n:12,tipo:'mc',text:`(AFYA Cruzeiro do Sul) Em um ECR, um novo anti-hipertensivo foi testado contra placebo. Resultado: p = 0,07. O pesquisador decide aceitar a hipótese alternativa e concluir que a droga é eficaz.\n\nAvalie:\nI — O pesquisador pode estar cometendo um Erro do Tipo I ao tomar essa decisão.\nPORQUE\nII — O p = 0,07 é maior que α = 0,05, logo não há evidência suficiente para rejeitar H₀; ao rejeitá-la, a probabilidade de declarar um efeito inexistente é maior que 5%.`,alts:['A asserção I é verdadeira, e a II é falsa.','As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.','As asserções I e II são verdadeiras, mas a II não é justificativa correta da I.','A asserção I é falsa, e a II é verdadeira.'],correct:1,comment:`✓ Correta: B — I: verdadeira (rejeitar H₀ quando p > α = potencial Erro Tipo I). II: verdadeira e justifica I corretamente (p > α → não se rejeita H₀; fazê-lo eleva a taxa de falsos positivos acima de 5%).\nRef: Dancey, Reidy & Rowe, Estatística sem Matemática.`},
+  {n:13,tipo:'mc',text:`(AFYA Palmas) ECR de fase 3 avaliou eficácia de novo imunobiológico no controle da asma moderada persistente vs. tratamento padrão com corticosteroide inalável. Comitê de ética destacou que o uso de placebo não seria aceitável por haver tratamento efetivo disponível.\n\nQual é a justificativa científica e ética mais adequada para o tipo de grupo controle utilizado?`,alts:['O uso de grupo controle placebo é indicado em doenças com tratamento disponível, pois permite isolar o efeito farmacológico puro.','A utilização do grupo controle placebo é ética quando há tratamento eficaz, desde que os participantes assinem o TCLE.','A escolha do grupo controle ativo assegura comparação direta com o tratamento efetivo existente, evitando privar pacientes de terapias comprovadas e garantindo validade ética e científica.','O grupo controle ativo deve sempre receber placebo associado à terapia padrão, independentemente da disponibilidade de tratamento.'],correct:2,comment:`✓ Correta: C — Grupo controle ativo (tratamento padrão) é indicado quando há terapia eficaz comprovada. Placebo não é ético nesse contexto: priva pacientes de tratamento. Consentimento não justifica privação de tratamento efetivo.\nRef: Vieira & Hossne, Metodologia Científica para a Área de Saúde, 3ª ed.`},
+  {n:14,tipo:'mc',text:`(AFYA Palmas) Coorte prospectivo avaliou sobrevida de pacientes com ICC tratados com novo inibidor da neprilisina vs. tratamento padrão. Após 24 meses: HR = 0,65; IC95%: 0,52–0,81; p < 0,001.\n\nQual interpretação estatística e clínica do HR é mais adequada?`,alts:['O tratamento experimental aumentou em 35% o risco relativo de morte e hospitalização cardiovascular, diferença estatística e clinicamente irrelevante.','O tratamento experimental reduziu em 35% o risco relativo de morte e hospitalização cardiovascular, diferença estatística e clinicamente significativa.','O tratamento experimental apresentou risco equivalente ao padrão terapêutico, sem diferença estatística ou relevância clínica.','O tratamento experimental reduziu em 65% o risco absoluto de morte e hospitalização cardiovascular, diferença estatística e clinicamente insignificante.'],correct:1,comment:`✓ Correta: B — HR = 0,65 → redução de 35% no risco relativo (1 − 0,65 = 0,35). IC95% (0,52–0,81) não inclui 1 e p < 0,001 confirmam significância estatística e relevância clínica. HR expressa risco relativo instantâneo, não absoluto.\nRef: Fletcher, Epidemiologia Clínica, 6ª ed.; Gordis, Epidemiologia, 5ª ed.`},
+  {n:15,tipo:'mc',text:`(AFYA Manacapuru) Coorte com 1.500 adultos acompanhados por 4 anos investigou tabagismo e hipertensão arterial. Resultado: OR = 1,7; IC 95%: 1,2–2,5.\n\nIdentifique a interpretação mais adequada sobre a associação observada:`,alts:['O resultado indica ausência de associação, já que o IC 95% varia de 1,2 a 2,5, abrangendo tanto aumento quanto redução do risco.','O IC 95% mostra que o estudo foi impreciso, pois o intervalo é muito estreito, reduzindo a confiança nos resultados.','O resultado sugere que fumantes têm 1,7 vezes mais chance de desenvolver hipertensão, com associação estatisticamente significativa, pois o IC 95% não inclui o valor 1.','O OR de 1,7 com IC 95% de 1,2 a 2,5 indica uma associação fraca e não significativa, sendo necessária amostra maior.'],correct:2,comment:`✓ Correta: C — OR > 1 = aumento do risco. IC95% (1,2–2,5) não inclui 1 = associação estatisticamente significativa. Intervalo moderadamente estreito = boa precisão. Todos os valores do IC são > 1, confirmando aumento de risco.\nRef: Fletcher, Epidemiologia Clínica, 6ª ed.; Gordis, 5ª ed.`}
+];
+
 const PROVAS_QUESTOES = {
+  'mcm-n2-2025-2': MCM_N2_2025_2,
   'soi3-2025-1': TODAS_2025_1,
   'soi3-2025-2': TODAS_2025_2,
   'prog-2024-1': PROG_2024_1,
@@ -3315,10 +3481,22 @@ const PROVAS_DATA = {
   },
   integradora: {
     titulo: 'Integradora',
-    provas: [
-      { id: 'integ-2025-1', label: 'Integradora — 2025.1', desc: 'Integradora 3º Período · 1ª Chamada · 40 questões · Múltipla Escolha', icon: '⭐' },
-      { id: 'integ-2025-2', label: 'Integradora — 2025.2', desc: 'Integradora 3º Período · N2 · 40 questões · Múltipla Escolha', icon: '⭐' },
-      { id: 'integ-2024-2', label: 'Integradora — 2024.2', desc: 'Integradora 3º Período · 26 de Novembro · 40 questões · Múltipla Escolha', icon: '⭐' }
+    grupos: [
+      {
+        label: 'Integradora',
+        provas: [
+          { id: 'integ-2025-1', label: 'Integradora — 2025.1', desc: 'Integradora 3º Período · 1ª Chamada · 40 questões · Múltipla Escolha', icon: '⭐' },
+          { id: 'integ-2025-2', label: 'Integradora — 2025.2', desc: 'Integradora 3º Período · N2 · 40 questões · Múltipla Escolha', icon: '⭐' },
+          { id: 'integ-2024-2', label: 'Integradora — 2024.2', desc: 'Integradora 3º Período · 26 de Novembro · 40 questões · Múltipla Escolha', icon: '⭐' }
+        ]
+      },
+      {
+        label: 'MCM N2',
+        icon: '🔬',
+        provas: [
+          { id: 'mcm-n2-2025-2', label: 'MCM N2 — 2025.2', desc: 'Métodos Científicos em Medicina III · N2 Específica · 15 questões · Múltipla Escolha', icon: '🔬' }
+        ]
+      }
     ]
   },
   tpi: {
@@ -3370,11 +3548,11 @@ function irParaProvas(cat) {
 
       return `<div style="grid-column:1/-1;">
         <div onclick="toggleGrupo(${gi})" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:6px;transition:border-color 0.2s;" onmouseover="this.style.borderColor='var(--border2)'" onmouseout="this.style.borderColor='var(--border)'">
-          <span style="font-size:16px;">📋</span>
+          <span style="font-size:16px;">${grupo.icon || grupo.provas[0]?.icon || '📋'}</span>
           <span style="font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text);flex:1;">${grupo.label}</span>
           <span id="grupo-arrow-${gi}" style="color:var(--text3);font-size:14px;transition:transform 0.25s;">▾</span>
         </div>
-        <div id="grupo-body-${gi}" style="display:none;flex-direction:column;gap:8px;margin-bottom:10px;">
+        <div id="grupo-body-${gi}" class="grupo-body" style="flex-direction:column;gap:8px;margin-bottom:10px;">
           ${provasHTML}
         </div>
       </div>`;
@@ -3413,13 +3591,31 @@ function irParaProvas(cat) {
 }
 
 function toggleGrupo(gi) {
-  const body = document.getElementById('grupo-body-' + gi);
+  const body  = document.getElementById('grupo-body-' + gi);
   const arrow = document.getElementById('grupo-arrow-' + gi);
-  const open = body.style.display === 'flex';
-  body.style.display = open ? 'none' : 'flex';
-  body.style.flexDirection = 'column';
-  arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(180deg)';
-  if (!open) aplicarInsigniaRecentes();
+  const open  = body.classList.contains('aberto');
+
+  if (open) {
+    // fechar: anima para 0
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+      body.style.maxHeight = '0';
+      body.style.opacity   = '0';
+    });
+    body.classList.remove('aberto');
+    arrow.style.transform = 'rotate(0deg)';
+  } else {
+    // abrir: expande
+    body.classList.add('aberto');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    body.style.opacity   = '1';
+    arrow.style.transform = 'rotate(180deg)';
+    // após transição, libera altura pra resize
+    body.addEventListener('transitionend', () => {
+      if (body.classList.contains('aberto')) body.style.maxHeight = 'none';
+    }, { once: true });
+    aplicarInsigniaRecentes();
+  }
 }
 
 // ====== MODAL SELEÇÃO DE QUESTÕES ======
@@ -3857,6 +4053,63 @@ function restartQuiz() { startQuiz(provaAtual); }
     <button class="modal-btn-cancelar" onclick="fecharModalTPI()">← Voltar</button>
   </div>
 </div>
+
+<script>
+// ===== COUNTDOWN BALÕES =====
+function calcularDias(dataAlvo) {
+  const agora = new Date();
+  const alvo = new Date(dataAlvo + 'T00:00:00');
+  const diff = alvo - agora;
+  if (diff <= 0) return { dias: 0, horas: 0, minutos: 0, passou: true };
+  const totalSeg = Math.floor(diff / 1000);
+  const dias = Math.floor(totalSeg / 86400);
+  const horas = Math.floor((totalSeg % 86400) / 3600);
+  const minutos = Math.floor((totalSeg % 3600) / 60);
+  return { dias, horas, minutos, passou: false };
+}
+
+function getClasse(dias) {
+  if (dias <= 3)  return 'urgente';
+  if (dias <= 10) return 'proximo';
+  return 'normal';
+}
+
+function atualizarBalloons() {
+  const provas = [
+    { data: '2026-05-28', numEl: 'cd-prog-num',  balloonEl: 'cd-prog-balloon'  },
+    { data: '2026-06-08', numEl: 'cd-integ-num', balloonEl: 'cd-integ-balloon' },
+  ];
+
+  provas.forEach(p => {
+    const numEl     = document.getElementById(p.numEl);
+    const balloonEl = document.getElementById(p.balloonEl);
+    if (!numEl || !balloonEl) return;
+
+    const c = calcularDias(p.data);
+    const cls = getClasse(c.dias);
+
+    // atualiza classe do balão
+    balloonEl.className = 'cd-balloon ' + (c.passou ? 'normal' : cls);
+
+    const valEl  = numEl.querySelector('.cd-num-val');
+    const txtEl  = numEl.querySelector('.cd-num-txt');
+    if (!valEl) return;
+
+    if (c.passou) {
+      valEl.textContent = '✓'; txtEl.textContent = '';
+    } else if (c.dias === 0) {
+      valEl.textContent = 'HOJE'; txtEl.textContent = '';
+    } else if (c.dias === 1) {
+      valEl.textContent = '1'; txtEl.textContent = 'dia';
+    } else {
+      valEl.textContent = c.dias; txtEl.textContent = 'dias';
+    }
+  });
+}
+
+atualizarBalloons();
+setInterval(atualizarBalloons, 60000);
+</script>
 
 <script>
 function bebeGirar() {
