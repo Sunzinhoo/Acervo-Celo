@@ -1568,11 +1568,11 @@
         <p>Métodos Científicos em Medicina</p>
         <span class="prova-arrow">↗</span>
       </div>
-      <div class="cat-card disabled" style="opacity:0.6;cursor:not-allowed;filter:grayscale(1);position:relative;">
-        <span class="periodo-badge-em-breve">Em breve</span>
+      <div class="cat-card" onclick="irParaProvas('ham')">
         <div class="cat-card-icon">🩺</div>
         <h3>HAM</h3>
         <p>Habilidades e Atitudes Médicas</p>
+        <span class="prova-arrow">↗</span>
       </div>
       <div class="cat-card disabled" style="opacity:0.6;cursor:not-allowed;filter:grayscale(1);position:relative;">
         <span class="periodo-badge-em-breve">Em breve</span>
@@ -3336,7 +3336,189 @@ const MCM_N1_2025_2 = [
   {n:10,tipo:'mc',text:`(UNIFIPMOC) ECR aberto em 23 centros (2015–2020), 698 pacientes (70–85 anos) com câncer de esôfago. Comparou CCRT com S-1 vs. RT isolada. Desfecho primário: sobrevida global em 5 anos. Resultado: CCRT com maior resposta completa (41,6% vs. 26,8%; p=0,007) e maior sobrevida (53,2% vs. 35,8%; p=0,002).\n\nQual fase do estudo clínico está descrita?`,alts:['Fase I — segurança e dosagem em pequeno grupo.','Fase II — eficácia preliminar em grupo maior.','Fase III — eficácia em grande amostra comparando com tratamento estabelecido.','Fase IV — pós-comercialização.'],correct:2,comment:`✓ Correta: C — Fase III: (1) grande amostra (698/23 centros), (2) comparação com tratamento padrão, (3) duração prolongada (~54 meses), (4) desfecho clínico primário relevante (sobrevida 5 anos).\nRef: Vieira & Hossne, 2021.`}
 ];
 
+const HAM_N1_2026_1 = [
+  {n:1, tipo:'mc',
+   text:`(AFYA CRUZEIRO DO SUL) Homem, 50 anos, hipertenso há 12 anos, em uso regular de três anti-hipertensivos em doses máximas toleradas (IECA, diurético tiazídico e bloqueador de canal de cálcio), apresenta controle pressórico inadequado há mais de seis meses. Na consulta atual: PA 150 x 90 mmHg. A médica sugere encaminhamento para especialista. O paciente recusa, preferindo "tratamento natural com chá de chuchu". A médica explica os riscos da hipertensão mal controlada. O paciente mantém sua decisão, encontra-se lúcido, orientado e demonstra compreensão das informações.
+
+Diante da recusa do paciente, a conduta médica mais adequada é:`,
+   alts:[
+     'Solicitar que o paciente leia e assine um termo de responsabilidade e encerrar a consulta sem necessidade de registro adicional.',
+     'Respeitar a decisão do paciente, registrar em prontuário detalhadamente as orientações prestadas, formalizar a recusa informada e manter acompanhamento longitudinal.',
+     'Suspender o acompanhamento na Unidade de Saúde da Família (USF), visto que o paciente não segue as recomendações médicas.',
+     'Encaminhar o paciente, compulsoriamente, ao especialista, independentemente de sua concordância, devido ao risco cardiovascular.'
+   ],
+   correct:1,
+   comment:`✓ Correta: B. O princípio da autonomia garante ao paciente o direito de aceitar ou recusar condutas médicas, desde que esteja devidamente esclarecido e possua capacidade decisória preservada. No caso, não há risco iminente que justifique intervenção compulsória. A conduta adequada inclui: formalizar a recusa informada, registrar minuciosamente no prontuário e manter vínculo e acompanhamento longitudinal na APS.\n\n✗ A: A assinatura de um termo não substitui o registro detalhado no prontuário.\n✗ C: O médico não deve abandonar o paciente por discordância quanto à conduta proposta.\n✗ D: Intervenção compulsória só é justificável em situações de risco iminente ou incapacidade decisória.\n\nRef: CFM. Código de Ética Médica. Resolução CFM n.º 2.217/2018.`},
+
+  {n:2, tipo:'mc',
+   text:`(AFYA SALVADOR) Uma criança de 9 anos é atendida em unidade de pronto atendimento por dispneia aos pequenos esforços há 3 dias, com piora ao deitar e redução do apetite. Possui antecedente de hipertensão arterial em acompanhamento ambulatorial. Ao exame inicial: FC 128 bpm, FR 30 irpm, SatO2 93% em ar ambiente, PA 148/92 mmHg. Ao exame físico observam-se achados clínicos sugestivos de insuficiência cardíaca.
+
+Qual conjunto de alterações no exame físico e nos exames complementares é mais esperado para o diagnóstico desta criança?`,
+   alts:[
+     'Turgência jugular em posição semissentada, refluxo hepatojugular com elevação sustentada da coluna venosa, estertores nas bases pulmonares e edema periférico; radiografia de tórax com cardiomegalia e congestão pulmonar; ecocardiograma com hipertrofia de ventrículo esquerdo e redução da fração de ejeção.',
+     'Dispneia predominantemente inspiratória associada a estridor, sem turgência jugular e sem refluxo hepatojugular; radiografia de tórax sem cardiomegalia e com campos pulmonares sem congestão; eletrocardiograma sem sinais de sobrecarga ventricular.',
+     'Taquicardia e febre com pulsos amplos, sem estertores e sem edema; radiografia de tórax sem sinais de congestão; ecocardiograma com fração de ejeção preservada e ausência de hipertrofia ventricular; exames laboratoriais com elevação de marcadores inflamatórios como principal alteração.',
+     'Murmúrio vesicular globalmente reduzido com hiperinsuflação, sem hepatomegalia e sem terceira bulha; radiografia de tórax com hipertransparência pulmonar e aumento dos espaços intercostais; ecocardiograma com cavidades cardíacas e função sistólica preservadas.'
+   ],
+   correct:0,
+   comment:`✓ Correta: A. O quadro descreve ICC descompensada em criança hipertensa. Esperado: sinais de congestão sistêmica (turgência jugular, refluxo hepatojugular, edema periférico) e pulmonar (estertores bibasais); Rx com cardiomegalia e congestão venocapilar; ecocardiograma com hipertrofia ventricular esquerda e redução da FE.\n\n✗ B: Estridor aponta para via aérea superior; ausência de congestão não se alinha ao quadro.\n✗ C: Descreve síndrome infecciosa sistêmica sem repercussão congestiva.\n✗ D: Sugere doença obstrutiva com hiperinsuflação — incompatível com o caso.\n\nRef: Porto, Semiologia Médica, 9ª ed. (2025); SBP, Tratado de Pediatria, 6ª ed. (2024).`},
+
+  {n:3, tipo:'mc',
+   text:`(AFYA BRAGANÇA) Uma mulher de 39 anos procura atendimento com queixa de fraqueza muscular proximal progressiva, irregularidade menstrual e ganho ponderal de aproximadamente 12 kg no último ano. Relata surgimento de equimoses espontâneas e piora do controle pressórico. Ao exame ectoscópico: face arredondada com rubor, acne, hirsutismo discreto, obesidade centrípeta com relativa preservação de massa muscular em membros, acúmulo de gordura em região cervical posterior e estrias violáceas largas em abdome. PA 160x100 mmHg, glicemia capilar 198 mg/dL.
+
+Com base nos achados ectoscópicos e na correlação com condições clínicas prevalentes, qual é a interpretação mais adequada do quadro?`,
+   alts:[
+     'Fácies hipocrática associada à alterações hormonais estruturadas e alterações cardiológicas.',
+     'Fácies mixedematosa decorrente de hipotireoidismo descompensado, justificando ganho de peso e hipertensão.',
+     'Fácies cushingoide secundária a hipercortisolismo crônico, com repercussões metabólicas e cardiovasculares associadas.',
+     'Fácies nefrótica associada à síndrome nefrótica primária, justificando edema facial e ganho ponderal.'
+   ],
+   correct:2,
+   comment:`✓ Correta: C. O conjunto de achados — face em "lua cheia", rubor facial, obesidade centrípeta, giba dorsal e estrias violáceas largas — é característico de fácies cushingoide (hipercortisolismo crônico / Síndrome de Cushing). Associado a fraqueza proximal, HAS, hiperglicemia e equimoses espontâneas.\n\n✗ B: Hipotireoidismo cursa com fácies mixedematosa (edema não depressível, pele seca), sem estrias violáceas ou hiperglicemia.\n✗ D: Síndrome nefrótica cursa com edema periorbitário predominante, sem redistribuição centrípeta de gordura.\n\nRef: Porto, Semiologia Médica, 9ª ed.; Porto, Exame Clínico, 8ª ed.`},
+
+  {n:4, tipo:'mc',
+   text:`(AFYA ITACOATIARA) Homem de 58 anos com dor torácica intensa em aperto há 1 hora, irradiando para o braço esquerdo, associada a sudorese fria e náuseas. É hipertenso e tabagista. Ao exame: PA 150x90 mmHg, FC 96 bpm, SatO2 95%. ECG de entrada com supradesnivelamento do ST ≥ 2 mm em V1 e V2.
+
+Com base nos achados clínicos e eletrocardiográficos, é correto afirmar que:`,
+   alts:[
+     'O eletrocardiograma preenche critérios diagnósticos de infarto agudo do miocárdio com supradesnivelamento do ST (IAMCSST) de parede inferior, devendo ser indicada reperfusão imediata.',
+     'O eletrocardiograma preenche critérios diagnósticos de infarto agudo do miocárdio com supradesnivelamento do ST (IAMCSST) de parede septal; deve ser indicada reperfusão imediata.',
+     'O infradesnivelamento em V1 e V2 indica isquemia de parede anterior difusa, sendo o tratamento clínico inicial para estabilização e reperfusão imediatamente após.',
+     'O padrão descrito é compatível com pericardite aguda, devido ao quadro clínico e supradesnivelamento em múltiplas derivações contíguas no ECG.'
+   ],
+   correct:1,
+   comment:`✓ Correta: B. Supradesnivelamento do ST ≥ 2 mm em V1 e V2 = IAMCSST de parede septal (território das artérias septais da descendente anterior). Indicação de reperfusão imediata.\n\n✗ A: IAM de parede inferior = supra em DII, DIII e aVF.\n✗ C: O ECG descreve SUPRA, não infra; e diante de IAMCSST a reperfusão é imediata.\n✗ D: Pericardite aguda = supra DIFUSO, acompanhado de infradesnivelamento do PR, sem distribuição territorial coronariana.\n\nRef: TIMERMAN et al. V Diretriz SBC sobre Tratamento do IAMCSST. Arq Bras Cardiol, 2015.`},
+
+  {n:5, tipo:'mc',
+   text:`(AFYA PORTO NACIONAL) Menina de 10 anos, estatura 141 cm, em consulta na UBS para acompanhamento de saúde. A pressão arterial foi aferida corretamente. Na primeira medida, a PA foi 118/76 mmHg. Por estar ≥ P90, realizou-se mais duas medidas na mesma visita:
+116/76 mmHg e 114/76 mmHg.
+
+Segundo a Tabela da SBP para 10 anos/141 cm: P50=100/62, P90=112/74, P95=116/77, P95+12mmHg=128/89.
+
+Com base na tabela apresentada, a classificação da PA desta paciente é:`,
+   alts:[
+     'Hipertensão estágio 1, pois a PA média atinge o P95 e permanece abaixo de P95 + 12 mmHg para idade, sexo e estatura.',
+     'Pressão arterial elevada, pois a pressão arterial média está entre o P90 e abaixo do P95 para idade, sexo e estatura.',
+     'Normotensão, pois a pressão arterial média da criança está abaixo do percentil 90 para idade, sexo e estatura.',
+     'Hipertensão estágio 2, pois a pressão arterial média ultrapassa o P95 + 12 mmHg para idade, sexo e estatura.'
+   ],
+   correct:0,
+   comment:`✓ Correta: A. Média sistólica = (118+116+114)/3 = 116 mmHg; média diastólica = 76 mmHg. Para 10 anos/141 cm: P95=116/77. A média 116/76 coincide com o P95 e está abaixo de P95+12 (128/88). Para 1–13 anos: HAS estágio 1 = ≥ P95 e < P95+12 mmHg.\n\n✗ B: PA elevada seria ≥ P90 e < P95 — aqui a média ATINGE o P95.\n✗ C: A média (116) não está abaixo do P90 (112).\n✗ D: HAS estágio 2 exigiria ≥ P95+12 (128) — a média (116) está muito abaixo.\n\nRef: SBP. Hipertensão arterial na infância e adolescência. Manual de Orientação, 2019.`},
+
+  {n:6, tipo:'mc',
+   text:`(AFYA MACEIÓ) Uma criança de 2 meses, sexo feminino, é trazida à consulta de puericultura. Nasceu com 2.400 g (baixo peso ao nascer), perímetro cefálico normal, sem alterações fenotípicas. Marcos presentes: emite sons além do choro, movimenta ativamente os membros e abre as mãos espontaneamente. Marco ausente: não apresenta sorriso social ao estímulo.
+
+De acordo com os critérios da Caderneta da Criança do Ministério da Saúde, qual é a classificação do desenvolvimento e a conduta adequada?`,
+   alts:[
+     'Desenvolvimento adequado; orientar a família e manter acompanhamento de rotina na próxima consulta.',
+     'Alerta para o desenvolvimento; orientar estímulos e reavaliar em 30 dias.',
+     'Provável atraso para o desenvolvimento; iniciar investigação etiológica com exames complementares e acionar equipe multidisciplinar.',
+     'Atraso do desenvolvimento; encaminhar imediatamente para avaliação especializada (neuropediatria).'
+   ],
+   correct:1,
+   comment:`✓ Correta: B. Segundo a Caderneta da Criança (MS), a ausência de UM marco esperado para a idade caracteriza ALERTA para o desenvolvimento. A conduta é orientar estimulação adequada e agendar reavaliação em 30 dias.\n\n✗ A: Há ausência de marco esperado (sorriso social aos 2 meses), portanto não é desenvolvimento adequado.\n✗ C e D: A ausência isolada de um marco aos 2 meses não define provável atraso nem atraso, sem outros critérios presentes.\n\nRef: Brasil. Ministério da Saúde. Caderneta da Criança: menina — passaporte da cidadania. 7ª ed. Brasília: MS, 2024.`},
+
+  {n:7, tipo:'mc',
+   text:`(AFYA SÃO JOÃO DEL-REI) Uma criança de 18 meses é levada à UPA pelo padrasto, com relato de "queda do sofá" há cerca de 2 horas, seguida de irritabilidade e recusa para movimentar o membro superior esquerdo. O acompanhante demonstra dificuldade em detalhar o mecanismo do trauma e apresenta versões inconsistentes ao longo da anamnese. Ao exame físico: equimoses em região dorsal e face posterior de coxas, marcas lineares paralelas em região glútea e cicatrizes hipocrômicas circulares em antebraço direito. Radiografia evidencia fratura metafisária em rádio distal esquerdo.
+
+Qual alternativa melhor integra a interpretação diagnóstica e a conduta inicial adequada?`,
+   alts:[
+     'A presença de fratura metafisária isolada, na ausência de múltiplas fraturas ou lesões intracranianas, reduz a probabilidade de violência física, sendo indicada investigação complementar antes de qualquer notificação.',
+     'A confirmação diagnóstica de maus-tratos exige exame pericial prévio; assim, a conduta inicial deve priorizar estabilização clínica e aguardar laudo técnico antes de acionar a rede de proteção.',
+     'O quadro configura forte suspeita de violência física, devendo-se proceder ao cuidado clínico imediato, registro detalhado e notificação compulsória, e acionar os órgãos competentes.',
+     'O padrão das lesões é compatível com trauma acidental na faixa etária descrita; a conduta adequada consiste em imobilização do membro e orientação domiciliar, com reavaliação ambulatorial programada.'
+   ],
+   correct:2,
+   comment:`✓ Correta: C. Fraturas metafisárias em crianças pequenas, equimoses em regiões pouco expostas a traumas acidentais, lesões com padrão sugestivo de objeto e história inconsistente são altamente sugestivas de violência física. A notificação compulsória deve ocorrer diante de suspeita fundamentada, sem necessidade de confirmação pericial prévia.\n\n✗ A: Fraturas metafisárias isoladas têm alta associação com trauma não acidental em crianças pequenas.\n✗ B: A notificação não depende de laudo pericial; tem caráter protetivo e preventivo.\n✗ D: O padrão das lesões não é típico de trauma acidental.\n\nRef: WAKSMAN, R.D. et al. Manual de Atendimento às Crianças e Adolescentes Vítimas de Violência. CFM, 2018.`},
+
+  {n:8, tipo:'mc',
+   text:`Durante o acompanhamento na USF, paciente de 74 anos (hipertenso e diabético) relata falta de ar ao realizar atividades mínimas, como escovar os dentes ou vestir-se, embora sinta-se confortável sentado em repouso. Ao exame físico: estertores em bases pulmonares e edema de membros inferiores (2+/4+) com sinal de cacifo. O médico solicita BNP, que apresenta valores significativamente elevados.
+
+Qual a interpretação correta do caso?`,
+   alts:[
+     'A classificação é NYHA III, e o aumento do BNP reflete estiramento da parede ventricular por aumento da pressão de enchimento ou sobrecarga volumétrica, atuando no sistema renina-angiotensina-aldosterona através da natriurese.',
+     'O enquadramento clínico funcional é de NYHA II, e os níveis de BNP elevados indicam uma ativação do sistema simpático que, de forma compensatória, promove a vasoconstrição sistêmica e o aumento da pós-carga.',
+     'O paciente apresenta classificação funcional NYHA III, sendo que o BNP é secretado pelos átrios em resposta à hipovolemia relativa, visando promover a reabsorção de sódio e água para compensar o débito cardíaco.',
+     'O paciente é classificado do ponto de vista funcional como NYHA IV, e o BNP elevado resulta do estiramento das fibras miocárdicas em resposta ao aumento da pressão diastólica final e sobrecarga de volume ventricular.'
+   ],
+   correct:0,
+   comment:`✓ Correta: A. NYHA III = sintomas (dispneia/fadiga) aos mínimos esforços, mas confortável em repouso. O BNP é liberado pelos VENTRÍCULOS em resposta ao estiramento/sobrecarga de pressão ou volume → promove natriurese, diurese e vasodilatação, antagonizando o SRAA.\n\n✗ B: NYHA II = sintomas durante atividades ordinárias; BNP não promove vasoconstrição.\n✗ C: BNP é secretado pelos ventrículos, não pelos átrios; e promove EXCREÇÃO de sódio, não reabsorção.\n✗ D: NYHA IV = sintomas em repouso absoluto — o paciente fica confortável sentado.\n\nRef: Brasil. Diretrizes Brasileiras de Insuficiência Cardíaca. Arq Bras Cardiol, 2018.`},
+
+  {n:9, tipo:'disc',
+   keywords:['identificação','queixa principal','história da doença atual','antecedentes gestacionais','antecedentes pessoais','desenvolvimento neuropsicomotor','alimentação','vacinação','antecedentes familiares','condições socioambientais','anamnese pediátrica'],
+   text:`(AFYA PARAÍBA) Na Unidade de Saúde da Família, comparece uma criança de 2 anos e 8 meses, sexo masculino, com tosse e febre há 3 dias. A mãe refere febre de até 38,5°C predominantemente noturna, tosse seca e redução do apetite. Frequenta creche onde outras crianças apresentaram sintomas respiratórios recentes. Nasceu de parto cesáreo com 38 semanas, pesando 3.100 g, sem intercorrências neonatais. Desenvolvimento neuropsicomotor adequado (sentou aos 6 meses, andou aos 12 meses, fala frases simples). Alimentação baseada em dieta familiar com frutas e leite. Vacinação referida como completa. Episódio prévio de bronquiolite aos 8 meses. Pai com asma brônquica. Mora com os pais e irmã de 6 anos em casa com saneamento básico.
+
+a) Identifique os elementos obrigatórios da anamnese pediátrica apresentados no caso, organizando-os conforme a estrutura adequada para a faixa etária. (1,5 ponto)`,
+   partA:{
+     title:"A) Elementos obrigatórios da anamnese pediátrica",
+     answer:`Identificação
+Criança do sexo masculino, 2 anos e 8 meses, acompanhada pela mãe, atendida em Unidade de Saúde da Família.
+
+Queixa principal
+"Febre e tosse há três dias."
+
+História da doença atual
+Febre de até 38,5°C, predominantemente noturna, associada a tosse seca e redução do apetite, há aproximadamente três dias. Frequenta creche, onde outras crianças apresentaram sintomas respiratórios semelhantes.
+
+Antecedentes gestacionais e perinatais
+Gestação com pré-natal adequado (6 consultas), sem intercorrências. Nascimento por cesariana com 38 semanas, peso ao nascer de 3.100 g, sem complicações neonatais.
+
+Antecedentes pessoais patológicos
+Episódio prévio de bronquiolite aos 8 meses, tratado em ambiente hospitalar, sem complicações.
+
+Desenvolvimento neuropsicomotor
+Sentou aos 6 meses, deambulou aos 12 meses e atualmente apresenta linguagem compatível com a idade (frases simples).
+
+Alimentação
+Dieta familiar com consumo regular de frutas e leite; sem alergias alimentares conhecidas.
+
+Vacinação
+Esquema vacinal referido como completo para a idade, segundo o calendário básico.
+
+Antecedentes familiares
+Pai com diagnóstico de asma brônquica.
+
+Condições socioambientais
+Reside com os pais e irmã de 6 anos em domicílio com saneamento básico. Frequenta creche.`
+   }
+  },
+
+  {n:10, tipo:'disc',
+   keywords:['falha ética','comunicação','cadeirante','usuário de cadeira de rodas','pessoa com deficiência','modelo biomédico','MCCP','método clínico centrado na pessoa','SOAP','subjetivo','objetivo','avaliação','plano'],
+   text:`(AFYA ABAETETUBA) Paciente masculino, 52 anos, usuário de cadeira de rodas por sequela de trauma medular, comparece à UBS para acompanhamento de HAS. Relata cansaço progressivo aos esforços e necessidade de usar três travesseiros para dormir. Afirma: "Doutor, eu tento seguir a dieta sem sal, mas moro sozinho e minha cozinha não é adaptada; acabo comendo o que é mais fácil de abrir e esquentar. Além disso, as calçadas da minha rua são péssimas, o que me impede de sair para me exercitar." O médico, mantendo-se em pé e olhando apenas para o prontuário eletrônico, interrompe o paciente e diz ao acompanhante: "O quadro deste cadeirante está evoluindo para algo grave, porque ele é negligente com as orientações dietéticas. Vou aumentar a dose do remédio e ele precisa dar um jeito de se exercitar."
+
+a) Analise a conduta ética e comunicativa do médico, apontando três faltas e a correção necessária para cada uma. (0,5 ponto)
+
+b) Compare o modelo de entrevista utilizado pelo médico com o Modelo Clínico Centrado na Pessoa (MCCP), destacando: 1 característica do modelo utilizado pelo médico e 2 princípios do MCCP que não foram contemplados. (0,5 ponto)
+
+b) Estruture o registro da consulta segundo a metodologia SOAP: S – O – A – P. (0,5 ponto)`,
+   partA:{
+     title:"A) Falhas éticas e comunicativas com correções",
+     answer:`Falha 1 (Direcionamento): O médico dirigiu-se ao acompanhante em vez de falar diretamente com o paciente. Correção: deve-se falar diretamente com a pessoa com deficiência, garantindo sua autonomia e inclusão nas decisões.
+
+Falha 2 (Terminologia): O médico utilizou o termo "cadeirante" de forma reducionista. Correção: o termo correto é "usuário de cadeira de rodas" ou "pessoa com deficiência física", priorizando a pessoa em relação à condição.
+
+Falha 3 (Atitude/Postura): O médico permaneceu em pé, ignorou o relato das dificuldades e responsabilizou o paciente por "negligência". Correção: posicionar-se à altura do paciente ("olho a olho"), demonstrar acessibilidade atitudinal, evitando julgamentos e reconhecendo as barreiras como determinantes sociais.`
+   },
+   partB:{
+     title:"B) Modelo Biomédico vs MCCP + SOAP",
+     answer:`Modelo utilizado pelo médico: Modelo biomédico — foca exclusivamente na patologia e na "não adesão" como falha do paciente, ignorando o contexto de vida e as barreiras estruturais.
+
+MCCP — 2 princípios não contemplados:
+1. Explorar a experiência da doença: o médico não investigou o impacto das barreiras físicas (cozinha, calçadas) na vida do paciente.
+2. Elaborar plano conjunto: o plano foi imposto unilateralmente, sem considerar a realidade funcional e as condições de vida do paciente.
+
+SOAP:
+S (Subjetivo): Cansaço progressivo aos esforços, ortopneia (uso de 3 travesseiros). Relato de barreiras de acessibilidade domiciliar (cozinha não adaptada) e urbana (calçadas), dificultando dieta e exercício.
+O (Objetivo): PA 158/104 mmHg (HAS Estágio 2). Ictus desviado, B3 e estertores em bases (sinais específicos de IC).
+A (Avaliação): HAS Estágio 2 complicada com Insuficiência Cardíaca Congestiva. Lesão de órgão-alvo agravada por barreiras ambientais e falta de acessibilidade.
+P (Plano): Ajuste de medicação anti-hipertensiva. Equipe multiprofissional: assistente social (avaliar acessibilidade urbana e direitos), terapeuta ocupacional (adaptação da cozinha), fisioterapeuta (exercícios compatíveis com a condição), nutricionista (dieta viável para o contexto).`
+   }
+  }
+];
+
 const PROVAS_QUESTOES = {
+  'ham-n1-2026-1': HAM_N1_2026_1,
   'mcm-n1-2025-2': MCM_N1_2025_2,
   'mcm-n2-2025-1': MCM_N2_2025_1,
   'mcm-n2-2025-2': MCM_N2_2025_2,
@@ -3537,6 +3719,12 @@ const PROVAS_DATA = {
           { id: 'mcm-n2-2025-2', label: 'MCM N2 — 2025.2', desc: 'Métodos Científicos em Medicina III · N2 Específica · 15 questões · Múltipla Escolha', icon: '🔬' }
         ]
       }
+    ]
+  },
+  ham: {
+    titulo: 'HAM — Habilidades e Atitudes Médicas',
+    provas: [
+      { id: 'ham-n1-2026-1', label: 'HAM N1 — 2026.1', desc: 'Habilidades e Atitudes Médicas III · N1 Específica · 1ª Chamada · 07/Abril · 10 questões (M.E. + Dissertativas)', icon: '🩺' }
     ]
   },
   tpi: {
