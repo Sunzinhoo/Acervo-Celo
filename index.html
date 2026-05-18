@@ -1446,65 +1446,6 @@
   .pitch-feature-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
   .pitch-feature-title { font-family:var(--font-head); font-size:13.5px; font-weight:700; color:var(--text); margin-bottom:2px; }
   .pitch-feature-desc { font-size:12px; color:var(--text2); line-height:1.5; }
-
-  /* ===== ACCORDION LER MAIS ===== */
-  .pitch-accordion { margin-bottom: 20px; display: flex; flex-direction: column; align-items: flex-start; }
-  .pitch-accordion-btn {
-    width: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 10px;
-    padding: 10px 16px;
-    font-family: var(--font-head);
-    font-size: 12.5px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .pitch-accordion-btn:hover { background: var(--green-bg); border-color: var(--green-border); }
-  .pitch-accordion-arrow { font-size: 14px; transition: transform 0.3s ease; color: var(--text3); }
-  .pitch-accordion-arrow.open { transform: rotate(180deg); }
-  .pitch-accordion-body {
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease;
-  }
-  .pitch-accordion-body.open {
-    opacity: 1;
-  }
-  .pitch-accordion-body p {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.75;
-    margin-top: 14px;
-  }
-  .pitch-accordion-body p strong { color: var(--text); font-weight: 600; }
-  .pitch-accordion-highlight {
-    background: rgba(74,222,74,0.05);
-    border: 1px solid rgba(74,222,74,0.2);
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin-top: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .pitch-acc-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 13px;
-    color: var(--text2);
-  }
-  .pitch-acc-row strong { color: var(--accent); font-weight: 700; }
-  .pitch-acc-divider { height: 1px; background: var(--border); }
   .recente-icon { font-size: 22px; flex-shrink: 0; width: 36px; text-align: center; }
   .recente-info { flex: 1; min-width: 0; }
   .recente-nome { font-size: 13px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1627,30 +1568,6 @@
               <div class="pitch-feature-title">Roteiros de treino + resumos para a OSCE</div>
               <div class="pitch-feature-desc">Prepare-se para a prática clínica com segurança</div>
             </div>
-          </div>
-        </div>
-
-        <div class="pitch-accordion" id="pitch-accordion">
-          <button class="pitch-accordion-btn" onclick="togglePitchAccordion()">
-            <span>📖 Ler mais</span>
-            <span class="pitch-accordion-arrow" id="pitch-arrow">▾</span>
-          </button>
-          <div class="pitch-accordion-body" id="pitch-body">
-            <p>O objetivo dessa plataforma é dinamizar o estudo por questões para alunos da Afya, de uma forma que seja possível analisar erros e acertos.</p>
-            <p>O site ainda não está com todos os recursos, mas gostaríamos de testar com um grupo menor de pessoas e receber o feedback para que a plataforma seja lançada com a melhor qualidade em <strong>2026.2</strong>.</p>
-            <p>No momento estamos focados no <strong>3° período da Afya Garanhuns</strong>, tendo em vista a proximidade da avaliação programada 3 e integradora. Acessando o Acervo, você poderá treinar com as últimas avaliações da instituição.</p>
-            <div class="pitch-accordion-highlight">
-              <div class="pitch-acc-row">
-                <span>🗓️ Acesso atual</span>
-                <span><strong>R$ 19,90</strong> até 30 de junho</span>
-              </div>
-              <div class="pitch-acc-divider"></div>
-              <div class="pitch-acc-row">
-                <span>🚀 A partir de 2026.2</span>
-                <span><strong>R$ 29,90</strong> por 6 meses</span>
-              </div>
-            </div>
-            <p style="font-size:12px;color:var(--text3);text-align:center;">Ao assinar agora, você nos ajuda a aprimorar a experiência para o futuro.</p>
           </div>
         </div>
       </div>
@@ -4750,25 +4667,6 @@ atualizarBalloons();
 setInterval(atualizarBalloons, 60000);
 </script>
 
-
-<script>
-function togglePitchAccordion() {
-  const body = document.getElementById('pitch-body');
-  const arrow = document.getElementById('pitch-arrow');
-  const isOpen = body.classList.contains('open');
-  if (isOpen) {
-    body.style.maxHeight = '0';
-    body.style.opacity = '0';
-    body.classList.remove('open');
-    arrow.classList.remove('open');
-  } else {
-    body.classList.add('open');
-    body.style.maxHeight = body.scrollHeight + 'px';
-    body.style.opacity = '1';
-    arrow.classList.add('open');
-  }
-}
-</script>
 
 <button class="btn-criador" onclick="window.open('https://guns.lol/sunzinho', '_blank')">✦ Criador do Acervo</button>
 
