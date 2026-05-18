@@ -29,6 +29,8 @@
   .item-info { flex: 1; min-width: 0; }
   .item-nome { font-size: 13px; font-weight: 600; color: #e8f5e8; }
   .item-sub { font-size: 11px; color: #7a9b7a; margin-top: 2px; }
+  .presenca-nome { font-size: 16px; font-weight: 700; color: #4ade4a; font-family: 'Syne', sans-serif; letter-spacing: 0.02em; margin-bottom: 3px; }
+  .presenca-sem-nome { font-size: 13px; font-style: italic; color: #3a5a3a; }
   .item-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
   .badge { font-size: 10px; padding: 3px 8px; border-radius: 99px; display: inline-block; }
   .badge-online { background: rgba(74,222,74,0.15); color: #4ade4a; border: 1px solid rgba(74,222,74,0.3); }
@@ -46,6 +48,8 @@
   .btn-outline:hover { border-color: #4ade4a; color: #4ade4a; }
   .btn-red { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; }
   .btn-red:hover { background: rgba(220,50,50,0.08); }
+  .btn-danger { background: rgba(220,50,50,0.15); border: 1px solid rgba(220,50,50,0.4); color: #f87171; }
+  .btn-danger:hover { background: rgba(220,50,50,0.3); }
   .btn-zap { background: #25D366; color: #fff; }
   .gerar-box { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 14px; padding: 16px; margin-bottom: 24px; }
   .gerar-box input { width: 100%; background: #060a06; border: 1px solid #1a2e1a; border-radius: 8px; padding: 10px 12px; color: #e8f5e8; font-size: 13px; font-family: 'DM Sans', sans-serif; margin-bottom: 10px; outline: none; }
@@ -137,7 +141,7 @@
 </div>
 
 <script>
-['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','resetarHistorico'].forEach(fn=>{
+['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','excluirCodigo','resetarHistorico'].forEach(fn=>{
   window[fn]=function(){const a=arguments;if(window['_a_'+fn])window['_a_'+fn](...a);else setTimeout(()=>window[fn](...a),300);};
 });
 </script>
@@ -330,6 +334,7 @@
           <div class="item-actions">
             <button class="btn btn-outline" onclick="copiarTexto('${v.codigo}')">Copiar</button>
             ${v.status !== 'bloqueado' ? `<button class="btn btn-red" onclick="revogarCodigo('${v.codigo}')">Revogar</button>` : `<button class="btn btn-green" onclick="reativarCodigo('${v.codigo}')">Reativar</button>`}
+            <button class="btn btn-danger" onclick="excluirCodigo('${v.codigo}')">🗑 Excluir</button>
           </div>
         </div>
       `;
@@ -344,6 +349,11 @@
   window._a_reativarCodigo = async (codigo) => {
     if (!confirm(`Reativar o código ${codigo}?`)) return;
     await update(ref(db, `codigos/${codigo}`), { status: 'ativo' });
+  };
+
+  window._a_excluirCodigo = async (codigo) => {
+    if (!confirm(`Excluir permanentemente o código ${codigo}? Essa ação não pode ser desfeita.`)) return;
+    await remove(ref(db, `codigos/${codigo}`));
   };
 
   // ===== PRESENÇA =====
@@ -366,7 +376,7 @@
       <div class="item">
         <div class="item-icon">${v.dispositivo && v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
         <div class="item-info">
-          ${v.nomeUsuario ? `<div class="item-nome">${v.nomeUsuario}</div>` : ''}
+          ${v.nomeUsuario ? `<div class="presenca-nome">👤 ${v.nomeUsuario}</div>` : '<div class="presenca-sem-nome">Sem nome</div>'}
           <div class="item-sub">${v.dispositivo||'—'}</div>
           <div class="item-sub">Entrou às ${formatTime(v.entrada)}${v.localizacao ? ' · 📍 '+v.localizacao : ''}</div>
           ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
@@ -390,7 +400,7 @@
         <div class="item">
           <div class="item-icon">${v.dispositivo && v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
           <div class="item-info">
-            ${v.nomeUsuario ? `<div class="item-nome">${v.nomeUsuario}</div>` : ''}
+            ${v.nomeUsuario ? `<div class="presenca-nome">👤 ${v.nomeUsuario}</div>` : '<div class="presenca-sem-nome">Sem nome</div>'}
             <div class="item-sub">${v.dispositivo||'—'}</div>
             <div class="item-sub">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu '+saida : ''}${v.localizacao ? ' · 📍 '+v.localizacao : ''}</div>
             ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
