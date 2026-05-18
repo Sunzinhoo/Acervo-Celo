@@ -59,15 +59,43 @@
   .empty { color: #7a9b7a; font-size: 13px; text-align: center; padding: 24px; }
   .codigo-tag { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: #4ade4a; background: rgba(74,222,74,0.08); padding: 2px 6px; border-radius: 4px; }
   .danger-btn { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+
+  /* NOTIFICAÇÕES */
+  .notif-banner { position: fixed; top: 16px; right: 16px; left: 16px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+  .notif-toast { background: #0d1a0d; border: 1px solid #fbbf24; border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.5); pointer-events: all; animation: slideIn 0.3s ease; }
+  .notif-toast.saindo { animation: slideOut 0.3s ease forwards; }
+  @keyframes slideIn { from { opacity:0; transform: translateY(-20px); } to { opacity:1; transform: translateY(0); } }
+  @keyframes slideOut { from { opacity:1; transform: translateY(0); } to { opacity:0; transform: translateY(-20px); } }
+  .notif-icon { font-size: 22px; flex-shrink: 0; }
+  .notif-body { flex: 1; }
+  .notif-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: #fbbf24; }
+  .notif-msg { font-size: 12px; color: #7a9b7a; margin-top: 2px; }
+  .notif-close { background: none; border: none; color: #7a9b7a; font-size: 18px; cursor: pointer; padding: 0 4px; line-height: 1; }
+  .notif-close:hover { color: #e8f5e8; }
+
+  /* Badge de contagem na aba */
+  .tab-badge { display: inline-flex; align-items: center; justify-content: center; background: #fbbf24; color: #060a06; font-size: 10px; font-weight: 800; border-radius: 99px; min-width: 17px; height: 17px; padding: 0 4px; margin-left: 5px; animation: badgePulse 1s infinite; }
+  @keyframes badgePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
+
+  /* Permissão notificação */
+  .notif-perm-bar { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: #fbbf24; }
+  .notif-perm-bar button { font-size: 11px; padding: 5px 12px; border-radius: 7px; background: #fbbf24; color: #060a06; border: none; cursor: pointer; font-weight: 700; white-space: nowrap; }
 </style>
 </head>
 <body>
 
+<div class="notif-banner" id="notifBanner"></div>
+
 <h1>⚡ Admin</h1>
 <p class="subtitle">Acervo Celo — Painel de controle</p>
 
+<div class="notif-perm-bar" id="notifPermBar" style="display:none;">
+  🔔 Ative as notificações para ser avisado quando alguém solicitar acesso
+  <button onclick="pedirPermissaoNotif()">Ativar</button>
+</div>
+
 <div class="tabs">
-  <button class="tab active" onclick="setTab('solicitacoes')">📥 Solicitações</button>
+  <button class="tab active" onclick="setTab('solicitacoes')" id="tabSolicitacoes">📥 Solicitações</button>
   <button class="tab" onclick="setTab('codigos')">🔑 Códigos</button>
   <button class="tab" onclick="setTab('presenca')">👥 Presença</button>
 </div>
@@ -145,6 +173,149 @@
   window[fn]=function(){const a=arguments;if(window['_a_'+fn])window['_a_'+fn](...a);else setTimeout(()=>window[fn](...a),300);};
 });
 </script>
+
+<script>
+// ===== SISTEMA DE NOTIFICAÇÕES =====
+let _notifAnteriorCount = null;
+let _notifAnteriorIds = new Set();
+let _notifAudioCtx = null;
+
+function _getAudioCtx() {
+  if (!_notifAudioCtx) _notifAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return _notifAudioCtx;
+}
+
+function tocarSomNotif() {
+  try {
+    const ctx = _getAudioCtx();
+    // Toca dois bips agudos
+    [0, 0.18].forEach(delay => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, ctx.currentTime + delay);
+      osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + delay + 0.12);
+      gain.gain.setValueAtTime(0.4, ctx.currentTime + delay);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.15);
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.15);
+    });
+  } catch(e) {}
+}
+
+function mostrarToast(titulo, mensagem) {
+  const banner = document.getElementById('notifBanner');
+  const toast = document.createElement('div');
+  toast.className = 'notif-toast';
+  toast.innerHTML = `
+    <div class="notif-icon">🔔</div>
+    <div class="notif-body">
+      <div class="notif-title">${titulo}</div>
+      <div class="notif-msg">${mensagem}</div>
+    </div>
+    <button class="notif-close" onclick="this.closest('.notif-toast').remove()">✕</button>
+  `;
+  banner.appendChild(toast);
+  // Remove automaticamente após 6s
+  setTimeout(() => {
+    toast.classList.add('saindo');
+    setTimeout(() => toast.remove(), 300);
+  }, 6000);
+}
+
+// Registra o Service Worker para notificações com aba fechada
+let _swRegistration = null;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    _swRegistration = reg;
+  }).catch(e => console.warn('SW não registrado:', e));
+}
+
+function enviarNotifNativa(nome, whatsapp) {
+  if (Notification.permission !== 'granted') return;
+  // Se o SW estiver ativo, usa ele (funciona com aba fechada)
+  if (_swRegistration && _swRegistration.active) {
+    _swRegistration.active.postMessage({
+      type: 'NOVA_SOLICITACAO',
+      nome,
+      whatsapp
+    });
+  } else {
+    // Fallback: notificação direta (só funciona com aba aberta)
+    try {
+      new Notification('🔔 Nova solicitação — Acervo Celo', {
+        body: `${nome} (${whatsapp}) está aguardando confirmação.`,
+        icon: '/favicon.ico',
+        requireInteraction: true
+      });
+    } catch(e) {}
+  }
+}
+
+function atualizarBadgeAba(count) {
+  const tab = document.getElementById('tabSolicitacoes');
+  if (!tab) return;
+  const existing = tab.querySelector('.tab-badge');
+  if (count > 0) {
+    if (existing) { existing.textContent = count; }
+    else {
+      const badge = document.createElement('span');
+      badge.className = 'tab-badge';
+      badge.textContent = count;
+      tab.appendChild(badge);
+    }
+  } else {
+    if (existing) existing.remove();
+  }
+}
+
+function pedirPermissaoNotif() {
+  Notification.requestPermission().then(p => {
+    if (p === 'granted') {
+      document.getElementById('notifPermBar').style.display = 'none';
+      mostrarToast('Notificações ativadas ✅', 'Você será avisado sobre novas solicitações.');
+    }
+  });
+}
+
+// Verifica e mostra a barra de permissão se necessário
+window.addEventListener('DOMContentLoaded', () => {
+  if ('Notification' in window && Notification.permission === 'default') {
+    document.getElementById('notifPermBar').style.display = 'flex';
+  }
+});
+
+// Função chamada pelo Firebase quando chegam solicitações
+window._notificarSolicitacoes = function(aguardando) {
+  const ids = new Set(aguardando.map(v => v.id));
+  const count = aguardando.length;
+
+  atualizarBadgeAba(count);
+
+  // Atualiza título da aba
+  if (count > 0) {
+    document.title = `(${count}) ⚡ Admin — Acervo Celo`;
+  } else {
+    document.title = 'Acervo Celo — Admin';
+  }
+
+  // Detecta novas solicitações (que não existiam antes)
+  if (_notifAnteriorIds.size > 0) { // ignora primeiro carregamento
+    aguardando.forEach(v => {
+      if (!_notifAnteriorIds.has(v.id)) {
+        // Nova solicitação!
+        tocarSomNotif();
+        mostrarToast('Nova solicitação! 🔔', `${v.nome} (${v.whatsapp}) está aguardando confirmação.`);
+        enviarNotifNativa(v.nome, v.whatsapp);
+      }
+    });
+  }
+
+  _notifAnteriorIds = ids;
+  _notifAnteriorCount = count;
+};
+</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -221,6 +392,9 @@
 
     totalAg.textContent = aguardando.length;
     totalCon.textContent = confirmados.length;
+
+    // Disparar notificações
+    window._notificarSolicitacoes(aguardando);
 
     listaAg.innerHTML = aguardando.length === 0 ? '<div class="empty">Nenhuma aguardando</div>' :
       aguardando.map(v => `
