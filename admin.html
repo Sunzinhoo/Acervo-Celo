@@ -9,71 +9,136 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #060a06; color: #e8f5e8; font-family: 'DM Sans', sans-serif; min-height: 100vh; padding: 24px 16px; }
   h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 28px; color: #4ade4a; margin-bottom: 4px; }
-  .subtitle { color: #7a9b7a; font-size: 14px; margin-bottom: 32px; }
-  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 32px; }
+  .subtitle { color: #7a9b7a; font-size: 14px; margin-bottom: 24px; }
+  .tabs { display: flex; gap: 0; margin-bottom: 24px; border-bottom: 1px solid #1a2e1a; }
+  .tab { background: transparent; border: none; color: #7a9b7a; font-size: 12px; font-family: 'Syne', sans-serif; font-weight: 600; padding: 10px 14px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tab.active { color: #4ade4a; border-bottom-color: #4ade4a; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
   .card { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 14px; padding: 18px; }
-  .card-label { font-size: 12px; color: #7a9b7a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .card-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: #4ade4a; }
-  .card-value.secondary { color: #e8f5e8; font-size: 28px; }
-  .section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: #e8f5e8; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .card-label { font-size: 11px; color: #7a9b7a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .card-value { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: #4ade4a; }
+  .card-value.secondary { color: #e8f5e8; font-size: 26px; }
+  .section-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: #e8f5e8; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
   .dot-live { width: 8px; height: 8px; border-radius: 50%; background: #4ade4a; animation: pulse 1.5s infinite; flex-shrink: 0; }
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
-  .lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 32px; }
-  .item { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
-  .item-icon { font-size: 20px; flex-shrink: 0; }
-  .item-info { flex: 1; }
-  .item-disp { font-size: 13px; font-weight: 500; color: #e8f5e8; }
-  .item-time { font-size: 11px; color: #7a9b7a; margin-top: 2px; }
-  .prova-badge { display: inline-block; margin-top: 6px; background: rgba(74,222,74,0.12); border: 1px solid rgba(74,222,74,0.3); color: #4ade4a; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 8px; }
-  .prova-badge-vazia { display: inline-block; margin-top: 6px; color: #3a5a3a; font-size: 11px; font-style: italic; }
-  .badge-offline { background: rgba(122,155,122,0.1); color: #7a9b7a; font-size: 10px; padding: 3px 8px; border-radius: 99px; border: 1px solid rgba(122,155,122,0.2); flex-shrink: 0; }
+  .lista { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+  .item { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px; }
+  .item-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-nome { font-size: 13px; font-weight: 600; color: #e8f5e8; }
+  .item-sub { font-size: 11px; color: #7a9b7a; margin-top: 2px; }
+  .item-actions { display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+  .badge { font-size: 10px; padding: 3px 8px; border-radius: 99px; display: inline-block; }
+  .badge-online { background: rgba(74,222,74,0.15); color: #4ade4a; border: 1px solid rgba(74,222,74,0.3); }
+  .badge-offline { background: rgba(122,155,122,0.1); color: #7a9b7a; border: 1px solid rgba(122,155,122,0.2); }
+  .badge-aguardando { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .badge-ativo { background: rgba(74,222,74,0.15); color: #4ade4a; border: 1px solid rgba(74,222,74,0.3); }
+  .badge-expirado { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+  .badge-bloqueado { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+  .badge-cooldown { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+  .prova-badge { display: inline-block; margin-top: 4px; background: rgba(74,222,74,0.12); border: 1px solid rgba(74,222,74,0.3); color: #4ade4a; font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+  .btn { font-size: 11px; padding: 5px 10px; border-radius: 7px; cursor: pointer; font-family: 'DM Sans', sans-serif; border: none; font-weight: 500; white-space: nowrap; }
+  .btn-green { background: #4ade4a; color: #060a06; }
+  .btn-green:hover { background: #22c55e; }
+  .btn-outline { background: transparent; border: 1px solid #1a2e1a; color: #7a9b7a; }
+  .btn-outline:hover { border-color: #4ade4a; color: #4ade4a; }
+  .btn-red { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; }
+  .btn-red:hover { background: rgba(220,50,50,0.08); }
+  .btn-zap { background: #25D366; color: #fff; }
+  .gerar-box { background: #0d1a0d; border: 1px solid #1a2e1a; border-radius: 14px; padding: 16px; margin-bottom: 24px; }
+  .gerar-box input { width: 100%; background: #060a06; border: 1px solid #1a2e1a; border-radius: 8px; padding: 10px 12px; color: #e8f5e8; font-size: 13px; font-family: 'DM Sans', sans-serif; margin-bottom: 10px; outline: none; }
+  .gerar-box input:focus { border-color: #4ade4a; }
+  .codigo-gerado { background: #060a06; border: 1px solid rgba(74,222,74,0.3); border-radius: 8px; padding: 10px 12px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: #4ade4a; margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; word-break: break-all; }
+  .divider { border: none; border-top: 1px solid #1a2e1a; margin: 20px 0; }
   .empty { color: #7a9b7a; font-size: 13px; text-align: center; padding: 24px; }
-  .divider { border: none; border-top: 1px solid #1a2e1a; margin-bottom: 24px; }
-  .refresh-btn { background: transparent; border: 1px solid #1a2e1a; color: #7a9b7a; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .refresh-btn:hover { border-color: #4ade4a; color: #4ade4a; }
-  .danger-btn { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 24px; margin-left: 8px; }
-  .danger-btn:hover { border-color: #e05555; background: rgba(220,50,50,0.08); }
+  .codigo-tag { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; color: #4ade4a; background: rgba(74,222,74,0.08); padding: 2px 6px; border-radius: 4px; }
+  .danger-btn { background: transparent; border: 1px solid rgba(220,50,50,0.3); color: #e05555; font-size: 12px; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
 </style>
 </head>
 <body>
 
 <h1>⚡ Admin</h1>
-<p class="subtitle">Acervo Celo — Painel de presença em tempo real</p>
+<p class="subtitle">Acervo Celo — Painel de controle</p>
 
-<div class="cards">
-  <div class="card">
-    <div class="card-label">Online agora</div>
-    <div class="card-value" id="totalOnline">—</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Total hoje</div>
-    <div class="card-value secondary" id="totalHoje">—</div>
-  </div>
-  <div class="card">
-    <div class="card-label">Celulares</div>
-    <div class="card-value secondary" id="totalCelular">—</div>
-  </div>
-  <div class="card">
-    <div class="card-label">PCs</div>
-    <div class="card-value secondary" id="totalPC">—</div>
-  </div>
+<div class="tabs">
+  <button class="tab active" onclick="setTab('solicitacoes')">📥 Solicitações</button>
+  <button class="tab" onclick="setTab('codigos')">🔑 Códigos</button>
+  <button class="tab" onclick="setTab('presenca')">👥 Presença</button>
 </div>
 
-<div class="section-title"><div class="dot-live"></div> Online agora</div>
-<div class="lista" id="listaOnline"><div class="empty">Carregando...</div></div>
-
-<hr class="divider">
-
-<div class="section-title">📋 Histórico de hoje</div>
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-  <span style="font-size:11px;color:#3a5a3a;">● Ao vivo</span>
-  <button class="danger-btn" style="margin-bottom:0;margin-left:0;" onclick="resetarHistorico()">🗑 Resetar histórico</button>
+<!-- TAB SOLICITAÇÕES -->
+<div id="tab-solicitacoes" class="tab-content active">
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Aguardando</div>
+      <div class="card-value" id="totalAguardando">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Confirmados</div>
+      <div class="card-value secondary" id="totalConfirmados">—</div>
+    </div>
+  </div>
+  <div class="section-title"><div class="dot-live"></div> Aguardando confirmação</div>
+  <div class="lista" id="listaSolicitacoes"><div class="empty">Carregando...</div></div>
+  <hr class="divider">
+  <div class="section-title">✅ Confirmados</div>
+  <div class="lista" id="listaConfirmados"><div class="empty">Carregando...</div></div>
 </div>
-<div class="lista" id="listaHistorico"><div class="empty">Carregando...</div></div>
+
+<!-- TAB CÓDIGOS -->
+<div id="tab-codigos" class="tab-content">
+  <div class="section-title">✨ Gerar código manualmente</div>
+  <div class="gerar-box">
+    <input type="text" id="inputNome" placeholder="Nome da pessoa (ex: Marcelo)" maxlength="30">
+    <input type="text" id="inputZap" placeholder="WhatsApp (opcional)" maxlength="20">
+    <button class="btn btn-green" style="width:100%;" onclick="gerarCodigo()">Gerar código</button>
+    <div id="codigoGeradoBox" style="display:none;">
+      <div class="codigo-gerado">
+        <span id="codigoGeradoTexto"></span>
+        <button class="btn btn-outline" onclick="copiarCodigo()">Copiar</button>
+      </div>
+    </div>
+  </div>
+  <div class="section-title">🔑 Todos os códigos</div>
+  <div class="lista" id="listaCodigos"><div class="empty">Carregando...</div></div>
+</div>
+
+<!-- TAB PRESENÇA -->
+<div id="tab-presenca" class="tab-content">
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Online agora</div>
+      <div class="card-value" id="totalOnline">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Total hoje</div>
+      <div class="card-value secondary" id="totalHoje">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Celulares</div>
+      <div class="card-value secondary" id="totalCelular">—</div>
+    </div>
+    <div class="card">
+      <div class="card-label">PCs</div>
+      <div class="card-value secondary" id="totalPC">—</div>
+    </div>
+  </div>
+  <div class="section-title"><div class="dot-live"></div> Online agora</div>
+  <div class="lista" id="listaOnline"><div class="empty">Carregando...</div></div>
+  <hr class="divider">
+  <div class="section-title">📋 Histórico de hoje</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <span style="font-size:11px;color:#3a5a3a;">● Ao vivo</span>
+    <button class="danger-btn" onclick="resetarHistorico()">🗑 Resetar</button>
+  </div>
+  <div class="lista" id="listaHistorico"><div class="empty">Carregando...</div></div>
+</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCd2h62MeUrOsX8wDOyStv2Bhax6MtuvbM",
@@ -88,14 +153,23 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
+  window.setTab = (tab) => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector(`[onclick="setTab('${tab}')"]`).classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  };
+
   function formatTime(val) {
     if (!val || val === 'DISCONNECT') return '—';
-    if (typeof val === 'number') {
-      const d = new Date(val);
-      return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    }
-    const d = new Date(val);
+    const d = new Date(typeof val === 'number' ? val : val);
     return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '—';
+    const d = new Date(ts);
+    return d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
 
   function getSaida(v) {
@@ -111,88 +185,222 @@
     return d.getDate() === hoje.getDate() && d.getMonth() === hoje.getMonth() && d.getFullYear() === hoje.getFullYear();
   }
 
-  // Online agora
+  function gerarCodigoStr(nome) {
+    const nomeLimpo = nome.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z]/g,'').slice(0,8);
+    const rand = Math.random().toString(36).substring(2,6).toUpperCase();
+    return `CELO-${nomeLimpo}-${rand}`;
+  }
+
+  // ===== SOLICITAÇÕES =====
+  onValue(ref(db, 'solicitacoes'), (snap) => {
+    const data = snap.val();
+    const listaAg = document.getElementById('listaSolicitacoes');
+    const listaCon = document.getElementById('listaConfirmados');
+    const totalAg = document.getElementById('totalAguardando');
+    const totalCon = document.getElementById('totalConfirmados');
+
+    if (!data) {
+      listaAg.innerHTML = '<div class="empty">Nenhuma solicitação ainda</div>';
+      listaCon.innerHTML = '<div class="empty">Nenhum confirmado ainda</div>';
+      totalAg.textContent = '0'; totalCon.textContent = '0';
+      return;
+    }
+
+    const itens = Object.entries(data).map(([id,v]) => ({id,...v})).sort((a,b) => b.timestamp - a.timestamp);
+    const aguardando = itens.filter(v => v.status === 'aguardando');
+    const confirmados = itens.filter(v => v.status === 'confirmado');
+
+    totalAg.textContent = aguardando.length;
+    totalCon.textContent = confirmados.length;
+
+    listaAg.innerHTML = aguardando.length === 0 ? '<div class="empty">Nenhuma aguardando</div>' :
+      aguardando.map(v => `
+        <div class="item">
+          <div class="item-icon">👤</div>
+          <div class="item-info">
+            <div class="item-nome">${v.nome}</div>
+            <div class="item-sub">📱 ${v.whatsapp}</div>
+            <div class="item-sub">${formatDate(v.timestamp)}</div>
+            <span class="badge badge-aguardando">Aguardando</span>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-green" onclick="confirmarPagamento('${v.id}','${escHtml(v.nome)}','${v.whatsapp}')">✓ Confirmar</button>
+            <button class="btn btn-red" onclick="recusarSolicitacao('${v.id}')">✗ Recusar</button>
+          </div>
+        </div>
+      `).join('');
+
+    listaCon.innerHTML = confirmados.length === 0 ? '<div class="empty">Nenhum confirmado</div>' :
+      confirmados.map(v => `
+        <div class="item">
+          <div class="item-icon">✅</div>
+          <div class="item-info">
+            <div class="item-nome">${v.nome}</div>
+            <div class="item-sub">📱 ${v.whatsapp}</div>
+            ${v.codigo ? `<div class="item-sub">Código: <span class="codigo-tag">${v.codigo}</span></div>` : ''}
+            <div class="item-sub">${formatDate(v.timestamp)}</div>
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-zap" onclick="abrirZap('${v.whatsapp}','${v.codigo||''}')">WhatsApp</button>
+          </div>
+        </div>
+      `).join('');
+  });
+
+  function escHtml(s) { return s.replace(/'/g,"\\'"); }
+
+  window.confirmarPagamento = async (id, nome, whatsapp) => {
+    const codigo = gerarCodigoStr(nome);
+    const expiracao = new Date('2025-06-30T23:59:59').getTime();
+    await update(ref(db, `solicitacoes/${id}`), { status: 'confirmado', codigo });
+    await set(ref(db, `codigos/${codigo}`), {
+      nome, whatsapp, codigo,
+      criado: Date.now(), expiracao,
+      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null
+    });
+    abrirZap(whatsapp, codigo);
+  };
+
+  window.recusarSolicitacao = async (id) => {
+    if (!confirm('Recusar essa solicitação?')) return;
+    await remove(ref(db, `solicitacoes/${id}`));
+  };
+
+  window.abrirZap = (whatsapp, codigo) => {
+    const num = whatsapp.replace(/\D/g,'');
+    const msg = codigo
+      ? `Olá! Seu acesso ao *Acervo Celo* foi liberado 🎉\n\nSeu código: *${codigo}*\n\nAcesse: https://sunzinhoo.github.io/Acervo-Celo/\n\n⚠️ Não compartilhe seu código — ele é de uso pessoal e intransferível.`
+      : `Olá! Obrigado pelo interesse no Acervo Celo.`;
+    window.open(`https://wa.me/55${num}?text=${encodeURIComponent(msg)}`, '_blank');
+  };
+
+  // ===== CÓDIGOS =====
+  window.gerarCodigo = async () => {
+    const nome = document.getElementById('inputNome').value.trim();
+    const zap = document.getElementById('inputZap').value.trim();
+    if (!nome) { alert('Digite o nome da pessoa!'); return; }
+    const codigo = gerarCodigoStr(nome);
+    const expiracao = new Date('2025-06-30T23:59:59').getTime();
+    await set(ref(db, `codigos/${codigo}`), {
+      nome, whatsapp: zap, codigo,
+      criado: Date.now(), expiracao,
+      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null
+    });
+    document.getElementById('codigoGeradoTexto').textContent = codigo;
+    document.getElementById('codigoGeradoBox').style.display = 'block';
+    document.getElementById('inputNome').value = '';
+    document.getElementById('inputZap').value = '';
+    window._ultimoCodigo = codigo;
+  };
+
+  window.copiarCodigo = () => { navigator.clipboard.writeText(window._ultimoCodigo||''); alert('Código copiado!'); };
+  window.copiarTexto = (txt) => { navigator.clipboard.writeText(txt); alert('Copiado!'); };
+
+  onValue(ref(db, 'codigos'), (snap) => {
+    const data = snap.val();
+    const lista = document.getElementById('listaCodigos');
+    if (!data) { lista.innerHTML = '<div class="empty">Nenhum código gerado ainda</div>'; return; }
+    const agora = Date.now();
+    const itens = Object.values(data).sort((a,b) => b.criado - a.criado);
+    lista.innerHTML = itens.map(v => {
+      const expirado = agora > v.expiracao;
+      const cooldown = v.cooldownAte && agora < v.cooldownAte;
+      let statusBadge = '';
+      if (v.status === 'bloqueado') statusBadge = '<span class="badge badge-bloqueado">Bloqueado</span>';
+      else if (expirado) statusBadge = '<span class="badge badge-expirado">Expirado</span>';
+      else if (cooldown) statusBadge = '<span class="badge badge-cooldown">Cooldown</span>';
+      else statusBadge = '<span class="badge badge-ativo">Ativo</span>';
+      const diasRestantes = Math.max(0, Math.ceil((v.expiracao - agora) / 86400000));
+      return `
+        <div class="item">
+          <div class="item-icon">🔑</div>
+          <div class="item-info">
+            <div class="item-nome">${v.nome}</div>
+            <div class="item-sub"><span class="codigo-tag">${v.codigo}</span></div>
+            ${v.whatsapp ? `<div class="item-sub">📱 ${v.whatsapp}</div>` : ''}
+            <div class="item-sub">${expirado ? '❌ Expirado' : `⏳ Expira em ${diasRestantes} dias`}</div>
+            ${cooldown ? `<div class="item-sub">🕒 Cooldown até ${formatDate(v.cooldownAte)}</div>` : ''}
+            ${statusBadge}
+          </div>
+          <div class="item-actions">
+            <button class="btn btn-outline" onclick="copiarTexto('${v.codigo}')">Copiar</button>
+            ${v.status !== 'bloqueado' ? `<button class="btn btn-red" onclick="revogarCodigo('${v.codigo}')">Revogar</button>` : `<button class="btn btn-green" onclick="reativarCodigo('${v.codigo}')">Reativar</button>`}
+          </div>
+        </div>
+      `;
+    }).join('');
+  });
+
+  window.revogarCodigo = async (codigo) => {
+    if (!confirm(`Revogar o código ${codigo}?`)) return;
+    await update(ref(db, `codigos/${codigo}`), { status: 'bloqueado' });
+  };
+
+  window.reativarCodigo = async (codigo) => {
+    if (!confirm(`Reativar o código ${codigo}?`)) return;
+    await update(ref(db, `codigos/${codigo}`), { status: 'ativo' });
+  };
+
+  // ===== PRESENÇA =====
   onValue(ref(db, 'online'), (snap) => {
     const data = snap.val();
     const lista = document.getElementById('listaOnline');
     const total = document.getElementById('totalOnline');
     const celular = document.getElementById('totalCelular');
     const pc = document.getElementById('totalPC');
-
     if (!data) {
       lista.innerHTML = '<div class="empty">Ninguém online agora</div>';
-      total.textContent = '0';
-      celular.textContent = '0';
-      pc.textContent = '0';
-      return;
+      total.textContent = '0'; celular.textContent = '0'; pc.textContent = '0'; return;
     }
-
     const itens = Object.values(data).filter(v => !v.saida || v.saida === null);
     total.textContent = itens.length;
-    celular.textContent = itens.filter(v => v.dispositivo.includes('Celular')).length;
-    pc.textContent = itens.filter(v => v.dispositivo.includes('PC')).length;
-
-    if (itens.length === 0) {
-      lista.innerHTML = '<div class="empty">Ninguém online agora</div>';
-      return;
-    }
-
+    celular.textContent = itens.filter(v => v.dispositivo && v.dispositivo.startsWith('📱')).length;
+    pc.textContent = itens.filter(v => v.dispositivo && !v.dispositivo.startsWith('📱')).length;
+    if (itens.length === 0) { lista.innerHTML = '<div class="empty">Ninguém online agora</div>'; return; }
     lista.innerHTML = itens.map(v => `
       <div class="item">
-        <div class="item-icon">${v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
+        <div class="item-icon">${v.dispositivo && v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
         <div class="item-info">
-          <div class="item-disp">${v.dispositivo}</div>
-          <div class="item-time">Entrou às ${formatTime(v.entrada)}${v.localizacao ? ' · 📍 ' + v.localizacao : ''}</div>
-          ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : '<div class="prova-badge-vazia">Nenhuma prova acessada</div>'}
+          ${v.nomeUsuario ? `<div class="item-nome">${v.nomeUsuario}</div>` : ''}
+          <div class="item-sub">${v.dispositivo||'—'}</div>
+          <div class="item-sub">Entrou às ${formatTime(v.entrada)}${v.localizacao ? ' · 📍 '+v.localizacao : ''}</div>
+          ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
         </div>
-        <span class="badge-online">● Online</span>
+        <span class="badge badge-online">● Online</span>
       </div>
     `).join('');
   });
 
-  window.resetarHistorico = async () => {
-    if (!confirm('Tem certeza que quer apagar todo o histórico de hoje?')) return;
-    const { remove } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
-    await remove(ref(db, 'historico'));
-    await remove(ref(db, 'online'));
-  };
   onValue(ref(db, 'historico'), (snap) => {
     const data = snap.val();
     const lista = document.getElementById('listaHistorico');
     const totalHoje = document.getElementById('totalHoje');
-
-    if (!data) {
-      lista.innerHTML = '<div class="empty">Sem histórico ainda</div>';
-      totalHoje.textContent = '0';
-      return;
-    }
-
-    const itens = Object.values(data)
-      .filter(v => isHoje(v.entrada))
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, 50);
-
+    if (!data) { lista.innerHTML = '<div class="empty">Sem histórico ainda</div>'; totalHoje.textContent = '0'; return; }
+    const itens = Object.values(data).filter(v => isHoje(v.entrada)).sort((a,b) => b.timestamp - a.timestamp).slice(0,50);
     totalHoje.textContent = itens.length;
-
-    if (itens.length === 0) {
-      lista.innerHTML = '<div class="empty">Sem acessos hoje ainda</div>';
-      return;
-    }
-
+    if (itens.length === 0) { lista.innerHTML = '<div class="empty">Sem acessos hoje</div>'; return; }
     lista.innerHTML = itens.map(v => {
       const saida = getSaida(v);
       return `
-      <div class="item">
-        <div class="item-icon">${v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
-        <div class="item-info">
-          <div class="item-disp">${v.dispositivo}</div>
-          <div class="item-time">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu ' + saida : ''}${v.localizacao ? ' · 📍 ' + v.localizacao : ''}</div>
-          ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
+        <div class="item">
+          <div class="item-icon">${v.dispositivo && v.dispositivo.startsWith('📱') ? '📱' : '💻'}</div>
+          <div class="item-info">
+            ${v.nomeUsuario ? `<div class="item-nome">${v.nomeUsuario}</div>` : ''}
+            <div class="item-sub">${v.dispositivo||'—'}</div>
+            <div class="item-sub">Entrou ${formatTime(v.entrada)}${saida ? ' · Saiu '+saida : ''}${v.localizacao ? ' · 📍 '+v.localizacao : ''}</div>
+            ${v.ultimaProva ? `<div class="prova-badge">${v.ultimaProva}</div>` : ''}
+          </div>
+          <span class="badge ${saida ? 'badge-offline' : 'badge-online'}">${saida ? 'Saiu' : '● Online'}</span>
         </div>
-        <span class="${saida ? 'badge-offline' : 'badge-online'}">${saida ? 'Saiu' : '● Online'}</span>
-      </div>
-    `}).join('');
+      `;
+    }).join('');
   });
+
+  window.resetarHistorico = async () => {
+    if (!confirm('Apagar todo o histórico de hoje?')) return;
+    await remove(ref(db, 'historico'));
+    await remove(ref(db, 'online'));
+  };
 </script>
 </body>
 </html>
