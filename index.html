@@ -4741,27 +4741,45 @@ window.addEventListener('appinstalled', () => {
 
   const presencaRef = push(ref(db, "online"));
   window._fbPresencaRef = presencaRef;
-  set(presencaRef, {
-    dispositivo,
-    entrada,
-    localizacao,
-    saida: null
-  });
 
-  onDisconnect(presencaRef).update({
-    saida: 'DISCONNECT',
-    saidaTs: serverTimestamp()
-  });
+  // Tenta pegar o nome do código salvo no localStorage
+  async function registrarPresenca() {
+    let nomeUsuario = null;
+    try {
+      const { getDatabase: getDB2, ref: ref2, get: get2 } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+      const codigo = localStorage.getItem('_celo_codigo');
+      if (codigo) {
+        const snap = await get2(ref2(db, `codigos/${codigo}`));
+        if (snap.exists()) nomeUsuario = snap.val().nome || null;
+      }
+    } catch(e) {}
 
-  const historicoRef = push(ref(db, "historico"));
-  window._fbHistoricoRef = historicoRef;
-  set(historicoRef, {
-    dispositivo,
-    entrada,
-    localizacao,
-    timestamp: Date.now()
-  });
-  onDisconnect(historicoRef).update({ saida: 'DISCONNECT', saidaTs: serverTimestamp() });
+    set(presencaRef, {
+      dispositivo,
+      entrada,
+      localizacao,
+      nomeUsuario,
+      saida: null
+    });
+
+    onDisconnect(presencaRef).update({
+      saida: 'DISCONNECT',
+      saidaTs: serverTimestamp()
+    });
+
+    const historicoRef = push(ref(db, "historico"));
+    window._fbHistoricoRef = historicoRef;
+    set(historicoRef, {
+      dispositivo,
+      entrada,
+      localizacao,
+      nomeUsuario,
+      timestamp: Date.now()
+    });
+    onDisconnect(historicoRef).update({ saida: 'DISCONNECT', saidaTs: serverTimestamp() });
+  }
+
+  registrarPresenca();
 </script>
 <script>
 window._celoReady = false;
@@ -4855,6 +4873,14 @@ window._celo_entrarComCodigo = async () => {
       await update(ref(db,`codigos/${codigo}`),{deviceId:did,sessaoToken:tok});
     }
     localStorage.setItem('_celo_codigo',codigo); localStorage.setItem('_celo_token',tok);
+
+    // Atualiza nome na presença após login
+    try {
+      const { getDatabase: dbP, ref: refP, update: updP } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+      if (window._fbPresencaRef) update(window._fbPresencaRef, { nomeUsuario: d.nome || null });
+      if (window._fbHistoricoRef) update(window._fbHistoricoRef, { nomeUsuario: d.nome || null });
+    } catch(e) {}
+
     document.getElementById('screen-acesso').style.display = 'none';
     irParaPeriodos();
     monitorarSessao(codigo, tok);
