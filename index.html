@@ -1498,15 +1498,10 @@
     <div class="acesso-title">Acervo Celo</div>
     <div class="acesso-sub">Plataforma de Simulados para Medicina</div>
     <div class="acesso-tabs">
-      <button class="acesso-tab active" onclick="setAcessoTab('codigo')">Tenho um código</button>
-      <button class="acesso-tab" onclick="setAcessoTab('solicitar')">Quero acesso</button>
+      <button class="acesso-tab active" onclick="setAcessoTab('solicitar')">Quero acesso</button>
+      <button class="acesso-tab" onclick="setAcessoTab('codigo')">Tenho um código</button>
     </div>
-    <div id="acesso-codigo" class="acesso-section active">
-      <div id="msg-codigo" class="acesso-msg"></div>
-      <input id="inputCodigo" class="acesso-input" type="text" placeholder="CELO-NOME-XXXX" maxlength="20" oninput="this.value=this.value.toUpperCase()">
-      <button class="acesso-btn" onclick="entrarComCodigo()">▶ Entrar</button>
-    </div>
-    <div id="acesso-solicitar" class="acesso-section">
+    <div id="acesso-solicitar" class="acesso-section active">
       <div id="msg-solicitar" class="acesso-msg"></div>
       <div id="form-solicitar">
         <input id="inputNomeSolic" class="acesso-input" type="text" placeholder="Seu nome completo" maxlength="50">
@@ -1523,6 +1518,11 @@
         </div>
         <button class="acesso-btn" style="background:transparent;border:1px solid #1a2e1a;color:#7a9b7a;" onclick="voltarForm()">← Voltar</button>
       </div>
+    </div>
+    <div id="acesso-codigo" class="acesso-section">
+      <div id="msg-codigo" class="acesso-msg"></div>
+      <input id="inputCodigo" class="acesso-input" type="text" placeholder="CELO-NOME-XXXX" maxlength="20" oninput="this.value=this.value.toUpperCase()">
+      <button class="acesso-btn" onclick="entrarComCodigo()">▶ Entrar</button>
     </div>
   </div>
 </div>
