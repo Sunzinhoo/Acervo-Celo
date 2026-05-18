@@ -136,6 +136,11 @@
   <div class="lista" id="listaHistorico"><div class="empty">Carregando...</div></div>
 </div>
 
+<script>
+['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','resetarHistorico'].forEach(fn=>{
+  window[fn]=function(){const a=arguments;if(window['_a_'+fn])window['_a_'+fn](...a);else setTimeout(()=>window[fn](...a),300);};
+});
+</script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
   import { getDatabase, ref, onValue, set, update, remove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -153,7 +158,7 @@
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
 
-  window.setTab = (tab) => {
+  window._a_setTab = (tab) => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
     document.querySelector(`[onclick="setTab('${tab}')"]`).classList.add('active');
@@ -249,9 +254,9 @@
 
   function escHtml(s) { return s.replace(/'/g,"\\'"); }
 
-  window.confirmarPagamento = async (id, nome, whatsapp) => {
+  window._a_confirmarPagamento = async (id, nome, whatsapp) => {
     const codigo = gerarCodigoStr(nome);
-    const expiracao = new Date('2025-06-30T23:59:59').getTime();
+    const expiracao = new Date('2026-06-30T23:59:59').getTime();
     await update(ref(db, `solicitacoes/${id}`), { status: 'confirmado', codigo });
     await set(ref(db, `codigos/${codigo}`), {
       nome, whatsapp, codigo,
@@ -261,12 +266,12 @@
     abrirZap(whatsapp, codigo);
   };
 
-  window.recusarSolicitacao = async (id) => {
+  window._a_recusarSolicitacao = async (id) => {
     if (!confirm('Recusar essa solicitação?')) return;
     await remove(ref(db, `solicitacoes/${id}`));
   };
 
-  window.abrirZap = (whatsapp, codigo) => {
+  window._a_abrirZap = (whatsapp, codigo) => {
     const num = whatsapp.replace(/\D/g,'');
     const msg = codigo
       ? `Olá! Seu acesso ao *Acervo Celo* foi liberado 🎉\n\nSeu código: *${codigo}*\n\nAcesse: https://sunzinhoo.github.io/Acervo-Celo/\n\n⚠️ Não compartilhe seu código — ele é de uso pessoal e intransferível.`
@@ -275,12 +280,12 @@
   };
 
   // ===== CÓDIGOS =====
-  window.gerarCodigo = async () => {
+  window._a_gerarCodigo = async () => {
     const nome = document.getElementById('inputNome').value.trim();
     const zap = document.getElementById('inputZap').value.trim();
     if (!nome) { alert('Digite o nome da pessoa!'); return; }
     const codigo = gerarCodigoStr(nome);
-    const expiracao = new Date('2025-06-30T23:59:59').getTime();
+    const expiracao = new Date('2026-06-30T23:59:59').getTime();
     await set(ref(db, `codigos/${codigo}`), {
       nome, whatsapp: zap, codigo,
       criado: Date.now(), expiracao,
@@ -293,8 +298,8 @@
     window._ultimoCodigo = codigo;
   };
 
-  window.copiarCodigo = () => { navigator.clipboard.writeText(window._ultimoCodigo||''); alert('Código copiado!'); };
-  window.copiarTexto = (txt) => { navigator.clipboard.writeText(txt); alert('Copiado!'); };
+  window._a_copiarCodigo = () => { navigator.clipboard.writeText(window._ultimoCodigo||''); alert('Código copiado!'); };
+  window._a_copiarTexto = (txt) => { navigator.clipboard.writeText(txt); alert('Copiado!'); };
 
   onValue(ref(db, 'codigos'), (snap) => {
     const data = snap.val();
@@ -331,12 +336,12 @@
     }).join('');
   });
 
-  window.revogarCodigo = async (codigo) => {
+  window._a_revogarCodigo = async (codigo) => {
     if (!confirm(`Revogar o código ${codigo}?`)) return;
     await update(ref(db, `codigos/${codigo}`), { status: 'bloqueado' });
   };
 
-  window.reativarCodigo = async (codigo) => {
+  window._a_reativarCodigo = async (codigo) => {
     if (!confirm(`Reativar o código ${codigo}?`)) return;
     await update(ref(db, `codigos/${codigo}`), { status: 'ativo' });
   };
@@ -396,7 +401,7 @@
     }).join('');
   });
 
-  window.resetarHistorico = async () => {
+  window._a_resetarHistorico = async () => {
     if (!confirm('Apagar todo o histórico de hoje?')) return;
     await remove(ref(db, 'historico'));
     await remove(ref(db, 'online'));
