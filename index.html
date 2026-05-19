@@ -4976,6 +4976,17 @@ window._celo_solicitarAcesso = async () => {
   showMsg('msg-solicitar','Registrando...','info');
   try {
     await push(ref(db,'solicitacoes'),{nome,whatsapp:zap,status:'aguardando',timestamp:Date.now()});
+
+    // Notifica no Telegram
+    const _tgToken = '8627734331:AAF0KEFmORu0hKC1Lt70z7oLt9l-L-pRlhw';
+    const _tgChat  = '6004179839';
+    const _tgTexto = `🔔 *Nova solicitação — Acervo Celo*\n\n👤 *Nome:* ${nome}\n📱 *WhatsApp:* ${zap}\n\n⏳ Aguardando confirmação de pagamento.`;
+    fetch(`https://api.telegram.org/bot${_tgToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: _tgChat, text: _tgTexto, parse_mode: 'Markdown' })
+    }).catch(()=>{});
+
     document.getElementById('form-solicitar').style.display='none';
     document.getElementById('pix-section').style.display='block';
     // Esconde tudo que não é necessário após solicitar
