@@ -81,6 +81,7 @@
   .notif-perm-bar { background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.25); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 12px; color: #fbbf24; }
   .notif-perm-bar button { font-size: 11px; padding: 5px 12px; border-radius: 7px; background: #fbbf24; color: #060a06; border: none; cursor: pointer; font-weight: 700; white-space: nowrap; }
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -224,6 +225,16 @@ function mostrarToast(titulo, mensagem) {
   }, 6000);
 }
 
+// ===== EMAILJS =====
+emailjs.init('ygmjJsG07PHuW2j1c');
+
+function enviarEmailNotif(nome, whatsapp) {
+  emailjs.send('service_kd7rnxk', 'template_re5xqrb', {
+    nome: nome,
+    whatsapp: whatsapp
+  }).catch(e => console.warn('EmailJS erro:', e));
+}
+
 // Registra o Service Worker para notificações com aba fechada
 let _swRegistration = null;
 if ('serviceWorker' in navigator) {
@@ -308,6 +319,7 @@ window._notificarSolicitacoes = function(aguardando) {
         tocarSomNotif();
         mostrarToast('Nova solicitação! 🔔', `${v.nome} (${v.whatsapp}) está aguardando confirmação.`);
         enviarNotifNativa(v.nome, v.whatsapp);
+        enviarEmailNotif(v.nome, v.whatsapp);
       }
     });
   }
