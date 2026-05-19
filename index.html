@@ -4978,6 +4978,13 @@ window._celo_solicitarAcesso = async () => {
     await push(ref(db,'solicitacoes'),{nome,whatsapp:zap,status:'aguardando',timestamp:Date.now()});
     document.getElementById('form-solicitar').style.display='none';
     document.getElementById('pix-section').style.display='block';
+    // Esconde tudo que não é necessário após solicitar
+    document.querySelector('.pitch-section').style.display='none';
+    document.querySelector('.acesso-tabs').style.display='none';
+    document.querySelector('.acesso-logo').style.display='none';
+    document.querySelector('.acesso-title').style.display='none';
+    document.querySelector('.acesso-sub').style.display='none';
+    document.getElementById('msg-solicitar').style.display='none';
     showMsg('msg-solicitar',`Solicitação enviada, ${nome.split(' ')[0]}! Faça o PIX e aguarde o código pelo WhatsApp.`,'ok');
   } catch(e) { showMsg('msg-solicitar','Erro. Tente novamente.','erro'); }
 };
@@ -4985,6 +4992,12 @@ window._celo_solicitarAcesso = async () => {
 window._celo_voltarForm = () => {
   document.getElementById('form-solicitar').style.display='block';
   document.getElementById('pix-section').style.display='none';
+  document.querySelector('.pitch-section').style.display='block';
+  document.querySelector('.acesso-tabs').style.display='flex';
+  document.querySelector('.acesso-logo').style.display='block';
+  document.querySelector('.acesso-title').style.display='block';
+  document.querySelector('.acesso-sub').style.display='block';
+  document.getElementById('msg-solicitar').style.display='block';
 };
 
 window._celo_copiarChavePix = () => {
