@@ -132,19 +132,18 @@
 <div id="tab-codigos" class="tab-content">
   <div class="section-title">📅 Validade global dos códigos</div>
   <div class="gerar-box" id="expiracaoBox">
-    <div style="font-size:12px;color:#7a9b7a;margin-bottom:10px;">Define a data de expiração para <strong style="color:#e8f5e8;">todos os códigos ativos</strong> de uma vez.</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
       <span style="font-size:12px;color:#7a9b7a;white-space:nowrap;">Expira em:</span>
       <input type="date" id="inputExpiracao" style="flex:1;">
-      <input type="time" id="inputExpiracaoHora" value="23:59" style="width:90px;">
+      <input type="time" id="inputExpiracaoHora" value="23:59" style="width:86px;">
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:6px;">
+    <div style="display:flex;gap:6px;margin-bottom:8px;">
       <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(30)">+30 dias</button>
       <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(60)">+60 dias</button>
       <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(90)">+90 dias</button>
     </div>
-    <button class="btn btn-green" style="width:100%;" onclick="aplicarExpiracaoGlobal()">✅ Aplicar a todos os códigos</button>
-    <div id="expiracaoAtualInfo" style="margin-top:10px;font-size:12px;color:#7a9b7a;text-align:center;"></div>
+    <button class="btn btn-green" style="width:100%;font-size:12px;" onclick="aplicarExpiracaoGlobal()">✅ Aplicar a todos os códigos</button>
+    <div id="expiracaoAtualInfo" style="margin-top:8px;font-size:11px;color:#3a5a3a;text-align:center;"></div>
   </div>
   <hr class="divider">
   <div class="section-title">✨ Gerar código manualmente</div>
@@ -195,7 +194,7 @@
 </div>
 
 <script>
-['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','excluirCodigo','resetarHistorico','alterarLimite','aplicarExpiracaoGlobal','definirExpiracaoRapida'].forEach(fn=>{
+['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','excluirCodigo','resetarHistorico','alterarLimite','aplicarExpiracaoGlobal','definirExpiracaoRapida','removerCooldown'].forEach(fn=>{
   window[fn]=function(){const a=arguments;if(window['_a_'+fn])window['_a_'+fn](...a);else setTimeout(()=>window[fn](...a),300);};
 });
 </script>
@@ -554,6 +553,7 @@ window._notificarSolicitacoes = function(aguardando) {
           </div>
           <div class="item-actions">
             <button class="btn btn-outline" onclick="copiarTexto('${v.codigo}')">Copiar</button>
+            ${cooldown ? `<button class="btn btn-outline" style="border-color:rgba(251,191,36,0.4);color:#fbbf24;" onclick="removerCooldown('${v.codigo}')">⏱ Cooldown</button>` : ''}
             ${v.status !== 'bloqueado' ? `<button class="btn btn-red" onclick="revogarCodigo('${v.codigo}')">Revogar</button>` : `<button class="btn btn-green" onclick="reativarCodigo('${v.codigo}')">Reativar</button>`}
             <button class="btn btn-danger" onclick="excluirCodigo('${v.codigo}')">🗑 Excluir</button>
           </div>
@@ -561,6 +561,12 @@ window._notificarSolicitacoes = function(aguardando) {
       `;
     }).join('');
   });
+
+  window._a_removerCooldown = async (codigo) => {
+    if (!confirm(`Remover o cooldown do código ${codigo}?`)) return;
+    await update(ref(db, `codigos/${codigo}`), { cooldownAte: null });
+    mostrarToast('Cooldown removido ✅', `O código ${codigo} pode ser usado novamente.`);
+  };
 
   window._a_revogarCodigo = async (codigo) => {
     if (!confirm(`Revogar o código ${codigo}?`)) return;
