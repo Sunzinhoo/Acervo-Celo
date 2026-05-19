@@ -235,6 +235,23 @@ function enviarEmailNotif(nome, whatsapp) {
   }).catch(e => console.warn('EmailJS erro:', e));
 }
 
+// ===== TELEGRAM BOT =====
+const TELEGRAM_TOKEN = '8627734331:AAF0KEFmORu0hKC1Lt70z7oLt9l-L-pRlhw';
+const TELEGRAM_CHAT_ID = '6004179839';
+
+function enviarTelegramNotif(nome, whatsapp) {
+  const texto = `🔔 *Nova solicitação — Acervo Celo*\n\n👤 *Nome:* ${nome}\n📱 *WhatsApp:* ${whatsapp}\n\n⏳ Aguardando confirmação de pagamento.`;
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: texto,
+      parse_mode: 'Markdown'
+    })
+  }).catch(e => console.warn('Telegram erro:', e));
+}
+
 // Registra o Service Worker para notificações com aba fechada
 let _swRegistration = null;
 if ('serviceWorker' in navigator) {
@@ -320,6 +337,7 @@ window._notificarSolicitacoes = function(aguardando) {
         mostrarToast('Nova solicitação! 🔔', `${v.nome} (${v.whatsapp}) está aguardando confirmação.`);
         enviarNotifNativa(v.nome, v.whatsapp);
         enviarEmailNotif(v.nome, v.whatsapp);
+        enviarTelegramNotif(v.nome, v.whatsapp);
       }
     });
   }
