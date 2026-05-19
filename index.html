@@ -1584,7 +1584,7 @@
           <div class="pix-valor">R$ 19,90</div>
           <div class="pix-label">Escaneie o QR Code ou copie a chave PIX</div>
           <img src="https://raw.githubusercontent.com/Sunzinhoo/Acervo-Celo/main/QRPIX.png" style="width:190px;height:190px;border-radius:10px;margin:0 auto 14px;display:block;" onerror="this.style.display='none'">
-          <div class="pix-chave" onclick="copiarChavePix()">00020126580014br.gov.bcb.pix0136a61c847d-2a86-4245-815f-66e2cb99e243520400005303986540519.905802BR5924MARCELO VICTOR DO NASCIM6009Sao Paulo62230519daqr32087478438712963044B03</div>
+          <button onclick="copiarChavePix()" id="btnCopiarPix" style="background:#00e676;color:#060a06;border:none;border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-bottom:4px;font-family:inherit;transition:opacity 0.2s;">📋 Copiar Pix</button>
           <div class="pix-aguardando">⏳ Após o pagamento, aguarde o código pelo WhatsApp</div>
         </div>
         <button class="acesso-btn" style="background:transparent;border:1px solid #1a2e1a;color:#7a9b7a;" onclick="voltarForm()">← Voltar</button>
@@ -4989,7 +4989,14 @@ window._celo_voltarForm = () => {
 
 window._celo_copiarChavePix = () => {
   navigator.clipboard.writeText('00020126580014br.gov.bcb.pix0136a61c847d-2a86-4245-815f-66e2cb99e243520400005303986540519.905802BR5924MARCELO VICTOR DO NASCIM6009Sao Paulo62230519daqr32087478438712963044B03')
-    .then(()=>alert('Chave PIX copiada!')).catch(()=>{});
+    .then(() => {
+      const btn = document.getElementById('btnCopiarPix');
+      if (btn) {
+        btn.textContent = '✅ Copiado!';
+        btn.style.opacity = '0.75';
+        setTimeout(() => { btn.textContent = '📋 Copiar Pix'; btn.style.opacity = '1'; }, 2500);
+      }
+    }).catch(()=>{});
 };
 
 // Ativar ready e processar fila
