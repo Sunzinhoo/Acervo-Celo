@@ -4823,9 +4823,10 @@ window.addEventListener('appinstalled', () => {
         const snap = await get2(ref2(db, `codigos/${codigo}`));
         if (snap.exists()) nomeUsuario = snap.val().nome || null;
         // Atualiza badge do header com o primeiro nome
-        const primeiroNome = (nomeUsuario || '').split(' ')[0];
+        const partesNome = (nomeUsuario || '').split(' ');
+        const nickNome = partesNome.slice(0, 2).join(' ');
         const headerNome = document.getElementById('header-nome');
-        if (headerNome && primeiroNome) headerNome.textContent = primeiroNome;
+        if (headerNome && nickNome) headerNome.textContent = nickNome;
       }
     } catch(e) {}
 
@@ -4913,7 +4914,10 @@ window._celo_clicarIniciar = async () => {
       const snap = await get(ref(db, `codigos/${codigo}`));
       if (snap.exists()) {
         const d = snap.val();
-        if (d.status !== 'bloqueado' && Date.now() <= d.expiracao && d.sessaoToken === token) {
+        const did = getDeviceId();
+        const deviceEntry = d.devices && d.devices[did];
+        const tokenValido = deviceEntry?.token === token || d.sessaoToken === token;
+        if (d.status !== 'bloqueado' && Date.now() <= d.expiracao && tokenValido) {
           irParaPeriodos();
           monitorarSessao(codigo, token);
           return;
@@ -4936,23 +4940,47 @@ window._celo_entrarComCodigo = async () => {
     if (d.status === 'bloqueado') { showMsg('msg-codigo','Código revogado.','erro'); return; }
     if (agora > d.expiracao) { showMsg('msg-codigo','Acesso expirado. Renove para continuar.','erro'); return; }
     const did = getDeviceId(); const tok = getToken();
-    if (d.cooldownAte && agora < d.cooldownAte && d.deviceId && d.deviceId !== did) {
+    const limite = d.limiteDispositivos || 1;
+
+    // Monta lista de dispositivos ativos (suporta multi-dispositivo)
+    const devices = d.devices || {};
+    const deviceIds = Object.keys(devices);
+    const jaAutorizado = deviceIds.includes(did);
+
+    // Verifica cooldown individual
+    if (d.cooldownAte && agora < d.cooldownAte && d.deviceId && d.deviceId !== did && !jaAutorizado) {
       const dias = Math.ceil((d.cooldownAte-agora)/86400000);
       showMsg('msg-codigo',`Troca de dispositivo bloqueada por mais ${dias} dias.`,'erro'); return;
     }
-    if (d.sessaoToken && d.deviceId && d.deviceId !== did) {
-      const ok = confirm('⚠️ Este código está em uso em outro dispositivo.\n\nAo continuar, o outro será desconectado e você ficará em cooldown de 10 dias para troca.\n\nDeseja continuar?');
+
+    if (!jaAutorizado && deviceIds.length >= limite) {
+      // Slots lotados — pergunta se quer expulsar o mais antigo
+      const ok = confirm(`⚠️ Este código já está em uso em ${deviceIds.length} dispositivo(s) (limite: ${limite}).\n\nAo continuar, o dispositivo mais antigo será desconectado e você ficará em cooldown de 10 dias para troca.\n\nDeseja continuar?`);
       if (!ok) { showMsg('msg-codigo','Cancelado.','info'); return; }
-      await update(ref(db,`codigos/${codigo}`),{deviceId:did,sessaoToken:tok,cooldownAte:agora+(10*24*60*60*1000)});
+      // Remove o dispositivo registrado mais antigo
+      const maisAntigo = deviceIds.reduce((a,b) => (devices[a]?.entrou||0) < (devices[b]?.entrou||0) ? a : b);
+      const updObj = {};
+      updObj[`devices/${maisAntigo}`] = null;
+      updObj[`devices/${did}`] = { token: tok, entrou: agora };
+      updObj['cooldownAte'] = agora + (10*24*60*60*1000);
+      updObj['deviceId'] = did;
+      updObj['sessaoToken'] = tok;
+      await update(ref(db,`codigos/${codigo}`), updObj);
     } else {
-      await update(ref(db,`codigos/${codigo}`),{deviceId:did,sessaoToken:tok});
+      // Tem slot livre ou já está autorizado — apenas registra/atualiza
+      const updObj = {};
+      updObj[`devices/${did}`] = { token: tok, entrou: agora };
+      updObj['deviceId'] = did;
+      updObj['sessaoToken'] = tok;
+      await update(ref(db,`codigos/${codigo}`), updObj);
     }
     localStorage.setItem('_celo_codigo',codigo); localStorage.setItem('_celo_token',tok);
 
     // Atualiza badge do header com o primeiro nome
-    const primeiroNome = (d.nome || '').split(' ')[0];
+    const partesNome = (d.nome || '').split(' ');
+    const nickNome = partesNome.slice(0, 2).join(' ');
     const headerNome = document.getElementById('header-nome');
-    if (headerNome && primeiroNome) headerNome.textContent = primeiroNome;
+    if (headerNome && nickNome) headerNome.textContent = nickNome;
 
     // Atualiza nome na presença após login
     try {
@@ -4968,8 +4996,10 @@ window._celo_entrarComCodigo = async () => {
 };
 
 function monitorarSessao(codigo, token) {
-  onValue(ref(db,`codigos/${codigo}/sessaoToken`),(s)=>{
-    if (s.val() && s.val() !== token) {
+  const did = getDeviceId();
+  onValue(ref(db,`codigos/${codigo}/devices/${did}`),(s)=>{
+    // Se o slot desse dispositivo foi removido ou o token mudou, desconecta
+    if (!s.exists() || (s.val()?.token && s.val().token !== token)) {
       localStorage.removeItem('_celo_codigo'); localStorage.removeItem('_celo_token');
       alert('Você foi desconectado — acesso em outro dispositivo.');
       location.reload();

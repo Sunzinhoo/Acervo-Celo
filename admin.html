@@ -469,14 +469,26 @@ window._notificarSolicitacoes = function(aguardando) {
 
   function escHtml(s) { return s.replace(/'/g,"\\'"); }
 
+  function getExpiracaoGlobal() {
+    const dataVal = document.getElementById('inputExpiracao')?.value;
+    const horaVal = document.getElementById('inputExpiracaoHora')?.value || '23:59';
+    if (dataVal) {
+      const ts = new Date(`${dataVal}T${horaVal}:00`).getTime();
+      if (!isNaN(ts)) return ts;
+    }
+    // fallback: 30 dias a partir de hoje
+    return Date.now() + (30 * 24 * 60 * 60 * 1000);
+  }
+
   window._a_confirmarPagamento = async (id, nome, whatsapp) => {
     const codigo = gerarCodigoStr(nome);
-    const expiracao = new Date('2026-06-30T23:59:59').getTime();
+    const expiracao = getExpiracaoGlobal();
     await update(ref(db, `solicitacoes/${id}`), { status: 'confirmado', codigo });
     await set(ref(db, `codigos/${codigo}`), {
       nome, whatsapp, codigo,
       criado: Date.now(), expiracao,
-      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null
+      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null,
+      limiteDispositivos: 1, devices: {}
     });
     abrirZap(whatsapp, codigo);
   };
@@ -500,11 +512,12 @@ window._notificarSolicitacoes = function(aguardando) {
     const zap = document.getElementById('inputZap').value.trim();
     if (!nome) { alert('Digite o nome da pessoa!'); return; }
     const codigo = gerarCodigoStr(nome);
-    const expiracao = new Date('2026-06-30T23:59:59').getTime();
+    const expiracao = getExpiracaoGlobal();
     await set(ref(db, `codigos/${codigo}`), {
       nome, whatsapp: zap, codigo,
       criado: Date.now(), expiracao,
-      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null
+      status: 'ativo', deviceId: null, sessaoToken: null, cooldownAte: null,
+      limiteDispositivos: 1, devices: {}
     });
     document.getElementById('codigoGeradoTexto').textContent = codigo;
     document.getElementById('codigoGeradoBox').style.display = 'block';
