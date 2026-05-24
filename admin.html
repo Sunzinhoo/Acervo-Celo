@@ -50,6 +50,12 @@
   .btn-red:hover { background: rgba(220,50,50,0.08); }
   .btn-danger { background: rgba(220,50,50,0.15); border: 1px solid rgba(220,50,50,0.4); color: #f87171; }
   .btn-danger:hover { background: rgba(220,50,50,0.3); }
+  .btn-vip-on  { background: rgba(251,191,36,0.18); border: 1px solid rgba(251,191,36,0.6); color: #fbbf24; }
+  .btn-vip-on:hover { background: rgba(251,191,36,0.32); }
+  .btn-vip-off { background: transparent; border: 1px solid rgba(251,191,36,0.25); color: #7a9b7a; }
+  .btn-vip-off:hover { background: rgba(251,191,36,0.1); color: #fbbf24; }
+  .badge-vip { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#060a06; font-size:10px; font-weight:800; padding:2px 7px; border-radius:20px; letter-spacing:0.05em; margin-left:6px; vertical-align:middle; }
+  .item-nome-vip { color: #fbbf24 !important; }
   .btn-zap { background: #25D366; color: #fff; }
   .device-limit { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
   .device-limit-label { font-size: 11px; color: #7a9b7a; }
@@ -137,11 +143,7 @@
       <input type="date" id="inputExpiracao" style="flex:1;">
       <input type="time" id="inputExpiracaoHora" value="23:59" style="width:86px;">
     </div>
-    <div style="display:flex;gap:6px;margin-bottom:8px;">
-      <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(30)">+30 dias</button>
-      <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(60)">+60 dias</button>
-      <button class="btn btn-outline" style="flex:1;font-size:11px;" onclick="definirExpiracaoRapida(90)">+90 dias</button>
-    </div>
+
     <button class="btn btn-green" style="width:100%;font-size:12px;" onclick="aplicarExpiracaoGlobal()">✅ Aplicar a todos os códigos</button>
     <div id="expiracaoAtualInfo" style="margin-top:8px;font-size:11px;color:#3a5a3a;text-align:center;"></div>
   </div>
@@ -194,7 +196,7 @@
 </div>
 
 <script>
-['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','excluirCodigo','resetarHistorico','alterarLimite','aplicarExpiracaoGlobal','definirExpiracaoRapida','removerCooldown','renovarCodigo'].forEach(fn=>{
+['setTab','confirmarPagamento','recusarSolicitacao','abrirZap','gerarCodigo','copiarCodigo','copiarTexto','revogarCodigo','reativarCodigo','excluirCodigo','resetarHistorico','alterarLimite','aplicarExpiracaoGlobal','definirExpiracaoRapida','removerCooldown','renovarCodigo','toggleVip'].forEach(fn=>{
   window[fn]=function(){const a=arguments;if(window['_a_'+fn])window['_a_'+fn](...a);else setTimeout(()=>window[fn](...a),300);};
 });
 </script>
@@ -549,7 +551,7 @@ window._notificarSolicitacoes = function(aguardando) {
         <div class="item">
           <div class="item-icon">🔑</div>
           <div class="item-info">
-            <div class="item-nome">${v.nome}</div>
+            <div class="item-nome ${v.vip ? 'item-nome-vip' : ''}">${v.nome}${v.vip ? '<span class="badge-vip">★ VIP</span>' : ''}</div>
             <div class="item-sub"><span class="codigo-tag">${v.codigo}</span></div>
             ${v.whatsapp ? `<div class="item-sub">📱 ${v.whatsapp}</div>` : ''}
             <div class="item-sub">${expirado ? '❌ Expirado' : `⏳ Expira em ${diasRestantes} dias`}</div>
@@ -566,7 +568,8 @@ window._notificarSolicitacoes = function(aguardando) {
           </div>
           <div class="item-actions">
             <button class="btn btn-outline" onclick="copiarTexto('${v.codigo}')">Copiar</button>
-            <button class="btn btn-outline" style="border-color:rgba(74,222,74,0.4);color:#4ade4a;" onclick="renovarCodigo('${v.codigo}', ${v.expiracao})">🔄 Renovar</button>
+            <button class="btn btn-outline" style="border-color:rgba(74,222,74,0.4);color:#4ade4a;" onclick="renovarCodigo('${v.codigo}')">🔄 Renovar</button>
+            <button class="btn ${v.vip ? 'btn-vip-on' : 'btn-vip-off'}" onclick="toggleVip('${v.codigo}', ${!!v.vip})">${v.vip ? '★ VIP' : '☆ VIP'}</button>
             ${cooldown ? `<button class="btn btn-outline" style="border-color:rgba(251,191,36,0.4);color:#fbbf24;" onclick="removerCooldown('${v.codigo}')">⏱ Cooldown</button>` : ''}
             ${v.status !== 'bloqueado' ? `<button class="btn btn-red" onclick="revogarCodigo('${v.codigo}')">Revogar</button>` : `<button class="btn btn-green" onclick="reativarCodigo('${v.codigo}')">Reativar</button>`}
             <button class="btn btn-danger" onclick="excluirCodigo('${v.codigo}')">🗑 Excluir</button>
@@ -576,33 +579,35 @@ window._notificarSolicitacoes = function(aguardando) {
     }).join('');
   });
 
+  window._a_toggleVip = async (codigo, isVip) => {
+    const novoStatus = !isVip;
+    await update(ref(db, `codigos/${codigo}`), { vip: novoStatus });
+    mostrarToast(
+      novoStatus ? '★ VIP ativado!' : 'VIP removido',
+      novoStatus ? `${codigo} agora é VIP ✨` : `${codigo} voltou ao acesso normal.`
+    );
+  };
+
   window._a_removerCooldown = async (codigo) => {
     if (!confirm(`Remover o cooldown do código ${codigo}?`)) return;
     await update(ref(db, `codigos/${codigo}`), { cooldownAte: null });
     mostrarToast('Cooldown removido ✅', `O código ${codigo} pode ser usado novamente.`);
   };
 
-  window._a_renovarCodigo = async (codigo, expiracaoAtual) => {
-    // Monta um mini modal de renovação inline via prompt
-    const opcoes = ['30', '60', '90'];
-    const escolha = prompt(
-      `🔄 Renovar código: ${codigo}\n\nQuantos dias deseja adicionar à validade atual?\n\n` +
-      `Digite: 30, 60 ou 90\n` +
-      `(ou qualquer número de dias)`
-    );
-    if (!escolha) return;
-    const dias = parseInt(escolha.trim());
-    if (isNaN(dias) || dias <= 0) { alert('Número de dias inválido.'); return; }
+  window._a_renovarCodigo = async (codigo) => {
+    // Busca a expiração mais longa atual entre todos os códigos
+    const snap = await new Promise(res => onValue(ref(db, 'codigos'), res, { onlyOnce: true }));
+    const data = snap.val();
+    if (!data) { alert('Nenhum código encontrado.'); return; }
+    const maxExp = Math.max(...Object.values(data).map(v => v.expiracao || 0));
+    if (!maxExp || maxExp <= 0) { alert('Não há expiração global definida.'); return; }
+    const dataFormatada = new Date(maxExp).toLocaleDateString('pt-BR');
+    const horaFormatada = new Date(maxExp).toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
 
-    // Calcula nova expiração: soma os dias a partir de hoje OU a partir da expiração atual (o que for maior)
-    const base = Math.max(Date.now(), expiracaoAtual || 0);
-    const novaExpiracao = base + (dias * 24 * 60 * 60 * 1000);
-    const dataFormatada = new Date(novaExpiracao).toLocaleDateString('pt-BR');
-
-    if (!confirm(`Renovar ${codigo} por +${dias} dias?\nNova expiração: ${dataFormatada}`)) return;
+    if (!confirm(`Renovar ${codigo}?\nNova expiração: ${dataFormatada} às ${horaFormatada} (expiração mais longa atual)`)) return;
 
     await update(ref(db, `codigos/${codigo}`), {
-      expiracao: novaExpiracao,
+      expiracao: maxExp,
       status: 'ativo'
     });
     mostrarToast('Código renovado ✅', `${codigo} agora expira em ${dataFormatada}.`);

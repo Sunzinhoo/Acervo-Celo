@@ -193,6 +193,8 @@
     border-radius: 99px;
   }
   .header-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  .header-nome-vip { color: #fbbf24 !important; font-weight: 700; }
+  .badge-vip-header { display:inline-block; background:linear-gradient(135deg,#fbbf24,#f59e0b); color:#060a06; font-size:9px; font-weight:800; padding:2px 6px; border-radius:20px; letter-spacing:0.05em; margin-left:5px; vertical-align:middle; line-height:1.4; }
 
   .section-label {
     font-family: var(--font-head);
@@ -1589,6 +1591,28 @@
         </div>
         <button class="acesso-btn" style="background:transparent;border:1px solid #1a2e1a;color:#7a9b7a;" onclick="voltarForm()">← Voltar</button>
       </div>
+
+      <!-- ===== RENOVAÇÃO (exibida quando código expirado) ===== -->
+      <div id="renovar-section" style="display:none;">
+        <div style="text-align:center;margin-bottom:20px;">
+          <div style="font-size:40px;margin-bottom:10px;">⏰</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:#fbbf24;margin-bottom:8px;">Seu acesso expirou</div>
+          <div style="font-size:13px;color:#7a9b7a;line-height:1.6;">Renove agora para continuar acessando todos os simulados e questões do Acervo Celo.</div>
+        </div>
+        <div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:14px;padding:16px;margin-bottom:18px;text-align:center;">
+          <div style="font-size:12px;color:#7a9b7a;margin-bottom:4px;">Código expirado:</div>
+          <div id="renovar-codigo-label" style="font-size:16px;font-weight:700;color:#fbbf24;letter-spacing:1px;margin-bottom:8px;"></div>
+          <div style="font-size:11px;color:#5a7a5a;">Para renovar, faça o pagamento via PIX e aguarde a reativação pelo WhatsApp.</div>
+        </div>
+        <div class="pix-box">
+          <div class="pix-valor">R$ 19,90</div>
+          <div class="pix-label">Escaneie o QR Code ou copie a chave PIX</div>
+          <img src="https://raw.githubusercontent.com/Sunzinhoo/Acervo-Celo/main/QRPIX.png" style="width:190px;height:190px;border-radius:10px;margin:0 auto 14px;display:block;" onerror="this.style.display='none'">
+          <button onclick="copiarChavePix()" style="background:#fbbf24;color:#060a06;border:none;border-radius:12px;padding:12px 28px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-bottom:4px;font-family:inherit;transition:opacity 0.2s;">📋 Copiar Pix</button>
+          <div class="pix-aguardando">⏳ Após o pagamento, seu acesso será reativado pelo WhatsApp</div>
+        </div>
+        <button class="acesso-btn" style="background:transparent;border:1px solid #1a2e1a;color:#7a9b7a;margin-top:10px;" onclick="voltarParaCodigo()">← Usar outro código</button>
+      </div>
     </div>
     <div id="acesso-codigo" class="acesso-section">
       <div id="msg-codigo" class="acesso-msg"></div>
@@ -2913,105 +2937,6 @@ Sobre a malária, assinale a alternativa correta:`,
   }
 ];
 
-// ====== PROGRAMADA 3 — 2025.2 ======
-const PROG3_2025_2 = [
-  {n:1, tipo:'mc',
-   text:`Paciente de 3 anos apresenta quadro clínico com lesões eczematosas e pruriginosas em regiões flexurais, xerose cutânea, escoriações e áreas de liquenificação. A história patológica pregressa revela início do quadro na primeira infância e antecedentes familiares de rinite alérgica, sendo estabelecido o diagnóstico de Dermatite Atópica (DA).
-
-Sobre a fisiopatologia desta condição, analise as asserções a seguir e a relação proposta entre elas:
-
-I. A disfunção da barreira epidérmica é o evento central na fisiopatologia da DA, resultando em aumento da perda hídrica transepidérmica e maior penetração de alérgenos e irritantes.
-
-PORQUE
-
-II. O estrato córneo dos pacientes com DA exibe defeitos moleculares, como a redução de filagrina e alterações na composição de lipídios (ceramidas), que comprometem a homeostase e a função protetora da pele.
-
-Marque a alternativa correta:`,
-   alts:[
-     "As afirmações I e II são verdadeiras, e a II justifica a I.",
-     "As afirmações I e II são verdadeiras, porém a II não justifica a I.",
-     "A afirmação I é verdadeira, e a II é falsa.",
-     "A afirmação I é falsa, e a II é verdadeira."
-   ],
-   correct:0,
-   comment:`✓ Correta: A — As afirmações I e II são verdadeiras, e a II justifica a I.\n\n✓ I: A disfunção da barreira epidérmica é de fato o evento central na DA, levando a:\n• Aumento da perda hídrica transepidérmica (TEWL)\n• Maior penetração de alérgenos, irritantes e microrganismos\n• Sensibilização imunológica e inflamação crônica\n\n✓ II (justifica a I): Os defeitos moleculares do estrato córneo — especialmente a redução de filagrina (gene FLG mutado) e alterações nas ceramidas — são a causa estrutural da disfunção de barreira descrita na asserção I. A filagrina é essencial para a organização do citoesqueleto dos corneócitos e manutenção do fator de umectação natural; as ceramidas são o principal lipídio da matriz lamelar que confere impermeabilidade.\n\nRef: Fitzpatrick's Dermatology; Harrison 21. ed.`
-  },
-  {n:2, tipo:'mc',
-   text:`A dengue é uma arbovirose causada por vírus RNA da família Flaviviridae, transmitida principalmente pelo mosquito Aedes aegypti. A infecção primária ocorre na pele, com posterior disseminação sistêmica. À luz do Código de Ética do Estudante de Medicina, espera-se que o acadêmico fundamente suas ações e orientações em evidências científicas atualizadas, evitando difundir informações falsas ou sensacionalistas sobre mecanismos de transmissão, fisiopatologia e prevenção da doença, em respeito à saúde individual e coletiva.
-
-Considerando a fisiopatologia e a biologia viral da dengue, bem como a responsabilidade ética do estudante de Medicina em divulgar informações corretas à população, assinale a alternativa cientificamente e eticamente adequada:`,
-   alts:[
-     "Ao orientar a comunidade, o estudante pode afirmar que o vírus da dengue (DENV) pertence à família Retroviridae e integra de forma permanente seu genoma ao DNA da célula hospedeira, reforçando a gravidade da infecção.",
-     "Em atividades educativas, é aceitável informar que existem quatro sorotipos (DENV-1 a 4) e que a infecção primária por um deles confere imunidade permanente e cruzada contra todos os demais, reduzindo a preocupação com futuras infecções.",
-     "Para fins de esclarecimento em campanhas, o estudante pode orientar que a transmissão do DENV ocorre principalmente por gotículas respiratórias (tosse ou espirro) de indivíduos virêmicos, chamando atenção para o isolamento respiratório.",
-     "Em consonância com a boa prática ética e científica, o estudante deve explicar que, após a inoculação cutânea pelo mosquito, o DENV infecta preferencialmente queratinócitos e células dendríticas (como as de Langerhans), que migram para os linfonodos regionais, onde se inicia a viremia e a disseminação sistêmica."
-   ],
-   correct:3,
-   comment:`✓ Correta: D\n\nApós a inoculação pelo Aedes aegypti, o DENV infecta inicialmente queratinócitos e células dendríticas da pele (especialmente células de Langerhans). Essas células apresentadoras migram para os linfonodos regionais, onde ocorre a replicação viral intensa e o início da viremia, com posterior disseminação sistêmica.\n\n✗ A: O DENV pertence à família Flaviviridae (RNA vírus de fita simples positiva), NÃO à Retroviridae. Não integra o genoma ao DNA hospedeiro.\n✗ B: A imunidade após infecção é permanente APENAS para o sorotipo infectante (DENV-1 a 4). Infecção por outro sorotipo não só é possível como pode ser mais grave (fenômeno do ADE — antibody-dependent enhancement).\n✗ C: A transmissão da dengue é EXCLUSIVAMENTE vetorial (picada do Aedes). Não há transmissão por gotículas respiratórias.\n\nRef: MS, Dengue: diagnóstico e manejo clínico, 2016; Harrison 21. ed.`
-  },
-  {n:3, tipo:'mc',
-   text:`A leucemia mieloide aguda (LMA) é uma neoplasia clonal do sistema hematopoiético, sendo a leucemia aguda mais comum em adultos. A Organização Mundial da Saúde (OMS) revisa periodicamente sua classificação para refletir os avanços no entendimento biológico e genético da doença.
-
-À luz do Código de Ética do Estudante de Medicina, cabe ao acadêmico utilizar classificações atualizadas, baseadas em evidências, evitando reproduzir conceitos desatualizados ou simplistas que possam comprometer o diagnóstico correto, a conduta clínica e a orientação adequada ao paciente e à sociedade.
-
-Considerando a classificação e o diagnóstico da LMA segundo critérios contemporâneos da OMS, e a responsabilidade ética do estudante em difundir informação técnica correta, assinale a alternativa adequada:`,
-   alts:[
-     "A LMA com predisposição germinativa é definida por síndromes de falência medular, mas exclui distúrbios dos telômeros, como a Disqueratose Congênita.",
-     "A classificação da OMS integra achados genéticos (citogenética e molecular), morfológicos e o histórico clínico do paciente (como terapia prévia) para definir as entidades da LMA.",
-     "O diagnóstico de LMA requer, obrigatoriamente, uma contagem de blastos de pelo menos 20% na medula óssea ou sangue periférico, independentemente dos achados genéticos.",
-     "A classificação da LMA pela OMS abandonou a morfologia (antiga FAB) e se baseia exclusivamente em achados moleculares e citogenéticos."
-   ],
-   correct:1,
-   comment:`✓ Correta: B\n\nA classificação da OMS para LMA é multidimensional e integra:\n• Achados genéticos: citogenética (ex: t(8;21), inv(16), t(15;17)) e molecular (ex: mutações em FLT3, NPM1, CEBPA)\n• Morfologia: percentual de blastos e características celulares\n• Contexto clínico: terapia citotóxica prévia (LMA relacionada a terapia), doenças mieloides preexistentes, predisposição germinativa\n\n✗ A: A Disqueratose Congênita (distúrbio dos telômeros) está INCLUÍDA no grupo de LMA com predisposição germinativa pela OMS 2022.\n✗ C: Determinadas alterações genéticas recorrentes (ex: t(8;21), inv(16), t(15;17)) definem LMA independentemente do percentual de blastos — podendo ser diagnosticada com <20%.\n✗ D: A morfologia NÃO foi abandonada; continua sendo integrada à classificação junto com dados genéticos e clínicos.\n\nRef: WHO Classification of Haematolymphoid Tumours, 2022; Harrison 21. ed.`
-  },
-  {n:4, tipo:'mc',
-   text:`Um paciente de 8 anos, portador de anemia falciforme, é levado ao pronto atendimento com queixa de dor intensa em membros inferiores há 24 horas, sem febre ou sinais de inflamação locais. Durante a anamnese, a mãe relata que o quadro de dor é recorrente e que, em outras ocasiões, o paciente apresentou palidez, icterícia e episódios de infecções respiratórias de repetição.
-
-Considerando o caso clínico e as manifestações características da anemia falciforme, analise as afirmativas a seguir:
-
-I. As crises dolorosas ósseas são manifestações típicas decorrentes da vaso-oclusão por eritrócitos falcizados.
-II. A icterícia está relacionada ao aumento da destruição das hemácias e consequente elevação da bilirrubina indireta.
-III. A esplenomegalia é um achado tardio, que tende a se acentuar com a progressão da doença.
-IV. As infecções bacterianas recorrentes estão associadas à asplenia funcional e ao comprometimento da resposta imunológica humoral.
-
-Assinale a alternativa correta:`,
-   alts:[
-     "Apenas as afirmativas I e II estão corretas.",
-     "Apenas as afirmativas I, II e IV estão corretas.",
-     "Apenas as afirmativas II e III estão corretas.",
-     "As afirmativas I, II, III e IV estão corretas."
-   ],
-   correct:1,
-   comment:`✓ Correta: B — Apenas as afirmativas I, II e IV estão corretas.\n\n✓ I: Crises vaso-oclusivas são causadas pelo falcizamento das hemácias → obstrução de pequenos vasos → isquemia óssea → dor intensa (crise álgica). É a manifestação mais comum da anemia falciforme.\n\n✓ II: A hemólise crônica (destruição aumentada das hemácias falcizadas) libera hemoglobina → conversão em bilirrubina indireta → icterícia com predomínio de BI.\n\n✗ III (falsa): A esplenomegalia ocorre na INFÂNCIA, mas com o tempo as crises vaso-oclusivas repetidas levam ao infarto esplênico progressivo → autoesplenectomia/asplenia funcional em adultos. O baço não se acentua com a progressão; pelo contrário, regride.\n\n✓ IV: A asplenia funcional compromete a opsonização (filtração de bactérias capsuladas) e a resposta humoral ao polissacarídeo capsular → maior susceptibilidade a S. pneumoniae, H. influenzae, N. meningitidis.\n\nRef: Harrison 21. ed.; Zago, Falcão & Pasquini — Hematologia.`
-  },
-  {n:5, tipo:'mc',
-   text:`Uma mulher de 40 anos, residente em área endêmica, apresenta lesão ulcerada única no antebraço direito, com bordas elevadas e fundo granuloso. A biópsia revela macrófagos repletos de amastigotas de Leishmania sp. e infiltrado linfocitário intenso.
-
-À luz dos mecanismos fisiopatológicos da leishmaniose tegumentar e do Código de Ética do Estudante de Medicina, que estabelece o dever de estudar com rigor, orientar com base em evidências e evitar a divulgação de informações falsas ou sensacionalistas sobre doenças infecciosas, assinale a alternativa correta:`,
-   alts:[
-     "É aceitável que o estudante explique à paciente que a destruição tecidual decorre de 'toxinas' liberadas pelo parasita em sua fase extracelular, ainda que esse mecanismo não seja bem comprovado, desde que isso ajude a enfatizar a gravidade da doença.",
-     "O estudante deve reconhecer que a infecção se mantém principalmente pela multiplicação da forma amastigota dentro dos macrófagos e pela resposta imune celular mediada por linfócitos T CD4+ e citocinas como IFN-γ e TNF-α, utilizando essas informações corretas ao educar a paciente sobre a doença (de forma adaptada a sua realidade).",
-     "É adequado afirmar que a leishmaniose tegumentar cursa, em geral, com imunossupressão intensa e ausência de resposta celular, justificando para a paciente que seu organismo 'não reage' ao parasita.",
-     "Em ações educativas, o estudante pode resumir que a inflamação local é devida principalmente à produção de anticorpos neutralizantes, enfatizando a resposta humoral como principal mecanismo de controle, mesmo sabendo que essa não é a via central de contenção do parasita."
-   ],
-   correct:1,
-   comment:`✓ Correta: B\n\nA fisiopatologia da leishmaniose tegumentar envolve:\n• Forma amastigota multiplica-se dentro dos fagolisossomos dos macrófagos (célula-alvo principal)\n• Resposta imune celular é o mecanismo central de controle: linfócitos T CD4+ (Th1) produzem IFN-γ e TNF-α, ativando os macrófagos para destruir o parasita\n• A lesão ulcerada com bordas elevadas e fundo granuloso reflete a resposta inflamatória granulomatosa mediada por células T\n• O infiltrado linfocitário na biópsia confirma a participação da imunidade celular\n\n✗ A: Divulgar mecanismo não comprovado ("toxinas extracelulares") é antiético e cientificamente incorreto — viola o Código de Ética do Estudante.\n✗ C: Na leishmaniose tegumentar há resposta celular ATIVA (ao contrário da forma difusa anérgica). Afirmar que o organismo "não reage" é falso.\n✗ D: A resposta humoral (anticorpos) tem papel secundário na contenção da Leishmania; o mecanismo central é a imunidade celular Th1.\n\nRef: Harrison 21. ed.; MS, Manual de Vigilância da Leishmaniose Tegumentar, 2017.`
-  },
-  {n:6, tipo:'mc',
-   text:`Uma criança de 6 anos de idade é levada ao pediatra pelos pais com histórico de irritabilidade, febre recorrente nas últimas três semanas, dor nas pernas que a impede de brincar e cansaço progressivo. Ao exame físico, a criança apresenta palidez acentuada, múltiplas petéquias (pequenos pontos hemorrágicos) nos braços e pernas, hepatoesplenomegalia (fígado e baço aumentados) moderada e sensibilidade dolorosa à palpação dos ossos longos. O hemograma revela anemia grave, trombocitopenia acentuada e leucocitose com presença de 90% de blastos (células imaturas) na contagem diferencial.
-
-Com base no quadro clínico e laboratorial apresentado, que levanta suspeita de Leucemia Linfoblástica Aguda (LLA), assinale a alternativa correta:`,
-   alts:[
-     "A exposição prévia e prolongada ao benzeno é considerada a causa primária mais comum neste caso pediátrico.",
-     "A dor óssea manifesta-se como um sintoma tardio e raro, sem relevância para o diagnóstico diferencial.",
-     "O diagnóstico definitivo é estabelecido exclusivamente pela presença de hepatoesplenomegalia e febre persistente.",
-     "A Síndrome de Down é um fator de risco genético conhecido que aumenta a predisposição para o desenvolvimento de LLA."
-   ],
-   correct:3,
-   comment:`✓ Correta: D\n\nA Síndrome de Down (trissomia do 21) é um dos fatores de risco genéticos mais bem estabelecidos para leucemia na infância:\n• Crianças com SD têm risco ~20x maior de desenvolver LLA ou LMA\n• A LLA é a leucemia mais comum em crianças (pico entre 2–5 anos)\n• Associação com translocações cromossômicas específicas\n\n✗ A: O benzeno é fator de risco para LMA em adultos (exposição ocupacional). Não é a causa primária mais comum de LLA pediátrica, que tem etiologia multifatorial (genética + fatores ambientais ainda não totalmente elucidados).\n\n✗ B: A dor óssea é um sintoma PRECOCE e FREQUENTE na LLA, decorrendo da infiltração da medula óssea por blastos → aumento da pressão intramedular. É classicamente descrita como dor noturna que acorda a criança — importante no diagnóstico diferencial com artrite juvenil.\n\n✗ C: O diagnóstico definitivo de LLA requer análise do mielograma (biópsia de medula óssea) com imunofenotipagem e estudo citogenético/molecular. Hepatoesplenomegalia e febre são sinais clínicos sugestivos, mas não definitivos.\n\nRef: Harrison 21. ed.; SBP, Diagnóstico Precoce do Câncer Pediátrico, 2017; Goldman-Cecil 2022.`
-  }
-];
-
 // ====== INTEGRADORA — 2024.2 ======
 const INTEGRADORA_2024_2 = [
   {n:1,tipo:"mc",text:`(AFYA MANACAPURU) Lactente do sexo masculino, com 1 ano de idade e portador de síndrome de Down (trissomia do 21), é levado pela mãe à UBS devido a picos febris de até 37,8°C há 10 dias. A mãe relata que o filho parou de caminhar há 2 dias devido a dor nos membros inferiores, aparenta estar mais quieto e tem apresentado palidez. A mãe questiona se os sintomas podem estar relacionados a uma deficiência vitamínica.
@@ -3914,7 +3839,6 @@ const PROVAS_QUESTOES = {
   'prog-2025-2': PROG_2025_2,
   'prog3-2024-1': PROG3_2024_1,
   'prog3-2025-1': PROG3_2025_1,
-  'prog3-2025-2': PROG3_2025_2,
   'integ-2025-1': INTEGRADORA_2025_1,
   'integ-2025-2': INTEGRADORA_2025_2,
   'integ-2024-2': INTEGRADORA_2024_2,
@@ -4079,8 +4003,7 @@ const PROVAS_DATA = {
         label: 'Programada 3',
         provas: [
           { id: 'prog3-2024-1', label: 'Programada 3 — 2024.1', desc: 'Avaliação Não Programada 3 – SOI III · 6 questões · Múltipla Escolha', icon: '📋' },
-          { id: 'prog3-2025-1', label: 'Programada 3 — 2025.1', desc: 'Avaliação Processual 3 – SOI III · 6 questões · Múltipla Escolha', icon: '📋' },
-          { id: 'prog3-2025-2', label: 'Programada 3 — 2025.2', desc: 'Avaliação Processual 3 – SOI III · 6 questões · Múltipla Escolha', icon: '📋' }
+          { id: 'prog3-2025-1', label: 'Programada 3 — 2025.1', desc: 'Avaliação Processual 3 – SOI III · 6 questões · Múltipla Escolha', icon: '📋' }
         ]
       }
     ]
@@ -4927,7 +4850,17 @@ window.addEventListener('appinstalled', () => {
         const partesNome = (nomeUsuario || '').split(' ');
         const nickNome = partesNome.slice(0, 2).join(' ');
         const headerNome = document.getElementById('header-nome');
-        if (headerNome && nickNome) headerNome.textContent = nickNome;
+        const isVip = snap.val()?.vip || false;
+        if (headerNome && nickNome) {
+          headerNome.textContent = nickNome;
+          if (isVip) {
+            headerNome.classList.add('header-nome-vip');
+            const badge = document.createElement('span');
+            badge.className = 'badge-vip-header';
+            badge.textContent = '★ VIP';
+            headerNome.parentNode.appendChild(badge);
+          }
+        }
       }
     } catch(e) {}
 
@@ -4970,6 +4903,8 @@ window.entrarComCodigo = _celoProxy('entrarComCodigo');
 window.solicitarAcesso = _celoProxy('solicitarAcesso');
 window.voltarForm = _celoProxy('voltarForm');
 window.copiarChavePix = _celoProxy('copiarChavePix');
+window.mostrarRenovacao = _celoProxy('mostrarRenovacao');
+window.voltarParaCodigo = _celoProxy('voltarParaCodigo');
 </script>
 <script type="module">
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -5039,7 +4974,11 @@ window._celo_entrarComCodigo = async () => {
     if (!snap.exists()) { showMsg('msg-codigo','Código inválido.','erro'); return; }
     const d = snap.val(); const agora = Date.now();
     if (d.status === 'bloqueado') { showMsg('msg-codigo','Código revogado.','erro'); return; }
-    if (agora > d.expiracao) { showMsg('msg-codigo','Acesso expirado. Renove para continuar.','erro'); return; }
+    if (agora > d.expiracao) {
+      // Mostra tela de renovação com PIX
+      mostrarRenovacao(codigo);
+      return;
+    }
     const did = getDeviceId(); const tok = getToken();
     const limite = d.limiteDispositivos || 1;
 
@@ -5081,7 +5020,19 @@ window._celo_entrarComCodigo = async () => {
     const partesNome = (d.nome || '').split(' ');
     const nickNome = partesNome.slice(0, 2).join(' ');
     const headerNome = document.getElementById('header-nome');
-    if (headerNome && nickNome) headerNome.textContent = nickNome;
+    if (headerNome && nickNome) {
+      headerNome.textContent = nickNome;
+      if (d.vip) {
+        headerNome.classList.add('header-nome-vip');
+        // Remove badge anterior se existir
+        const oldBadge = headerNome.parentNode.querySelector('.badge-vip-header');
+        if (oldBadge) oldBadge.remove();
+        const badge = document.createElement('span');
+        badge.className = 'badge-vip-header';
+        badge.textContent = '★ VIP';
+        headerNome.parentNode.appendChild(badge);
+      }
+    }
 
     // Atualiza nome na presença após login
     try {
@@ -5141,6 +5092,33 @@ window._celo_solicitarAcesso = async () => {
     document.getElementById('screen-acesso')?.scrollTo({ top: 0, behavior: 'smooth' });
     showMsg('msg-solicitar',`Solicitação enviada, ${nome.split(' ')[0]}! Faça o PIX e aguarde o código pelo WhatsApp.`,'ok');
   } catch(e) { showMsg('msg-solicitar','Erro. Tente novamente.','erro'); }
+};
+
+window._celo_mostrarRenovacao = (codigo) => {
+  // Oculta tudo da aba solicitar e código
+  document.getElementById('acesso-solicitar').querySelectorAll(':scope > *').forEach(el => el.style.display = 'none');
+  document.getElementById('renovar-section').style.display = 'block';
+  const label = document.getElementById('renovar-codigo-label');
+  if (label) label.textContent = codigo || '';
+  // troca abas para deixar aba "solicitar" ativa visualmente mas sem o conteúdo padrão
+  document.querySelectorAll('.acesso-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.acesso-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('acesso-solicitar').classList.add('active');
+  document.querySelector(`[onclick="setAcessoTab('solicitar')"]`).classList.add('active');
+  document.getElementById('screen-acesso').scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window._celo_voltarParaCodigo = () => {
+  document.getElementById('renovar-section').style.display = 'none';
+  // Restaura visibilidade dos elementos da aba solicitar
+  document.querySelector('.pitch-section').style.display = 'block';
+  document.querySelector('.acesso-tabs').style.display = 'flex';
+  document.querySelector('.acesso-logo').style.display = 'block';
+  document.querySelector('.acesso-title').style.display = 'block';
+  document.querySelector('.acesso-sub').style.display = 'block';
+  document.getElementById('msg-solicitar').style.display = 'block';
+  // Muda para aba de código
+  setAcessoTab('codigo');
 };
 
 window._celo_voltarForm = () => {
